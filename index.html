@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Time Clock</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root {
+    --ink: #1c231f; --paper: #f6f5f1; --line: #dcd9d0;
+    --teal: #10534a; --teal-dark: #0b3b34; --amber: #c9862a; --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 48px; }
+  .brand { font-size: 15px; letter-spacing: 0.02em; color: #6b7268; margin-bottom: 28px; }
+  .card { width: 100%; max-width: 380px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px 24px; }
+  label { display: block; font-size: 13px; color: #6b7268; margin-bottom: 6px; }
+  select, input[type="text"] { width: 100%; font-size: 17px; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--paper); color: var(--ink); margin-bottom: 20px; }
+  select:focus, input:focus, button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .status-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; font-size: 14px; color: #6b7268; }
+  .status-row strong { color: var(--ink); }
+  button.punch { width: 100%; border: none; border-radius: 12px; padding: 20px; font-size: 19px; font-weight: 600; color: #fff; cursor: pointer; transition: transform 0.06s ease; }
+  button.punch:active { transform: scale(0.98); }
+  button.punch.in { background: var(--teal); }
+  button.punch.in:hover { background: var(--teal-dark); }
+  button.punch.out { background: var(--amber); }
+  button.punch:disabled { background: #b7bcb4; cursor: default; }
+  .last-punch { text-align: center; font-size: 13px; color: #6b7268; margin-top: 16px; min-height: 16px; }
+  .admin-link { margin-top: 28px; font-size: 13px; color: #8a8f85; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 8px; }
+  #admin { width: 100%; max-width: 720px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+  .admin-header h2 { font-size: 20px; margin: 0; }
+  .admin-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .admin-controls input[type="date"] { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
+  .btn-small { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; font-size: 14px; cursor: pointer; color: var(--ink); }
+  .btn-small:hover { background: var(--paper); }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  thead th { text-align: left; font-size: 12px; color: #6b7268; padding: 10px 14px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  tbody td { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+  tbody tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .tag.in { background: #e3efe9; color: var(--teal-dark); }
+  .tag.out { background: #f6e9d6; color: #8a5a1c; }
+  .emp-group { margin-bottom: 20px; }
+  .emp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .emp-name { font-size: 15px; margin: 0; }
+  .emp-hours { font-size: 13px; color: #6b7268; }
+  .empty { text-align: center; color: #8a8f85; padding: 40px 0; font-size: 14px; }
+  .hidden { display: none !important; }
+  .lock { max-width: 320px; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .lock input { margin-bottom: 14px; }
+</style>
+</head>
+<body>
+  <div id="clockView">
+    <div class="brand">Time Clock</div>
+    <div class="card">
+      <label for="employeeSelect">Employee</label>
+      <select id="employeeSelect"></select>
+      <div class="status-row"><span>Current status</span><strong id="statusText">—</strong></div>
+      <button id="punchBtn" class="punch in" disabled>Loading…</button>
+      <div class="last-punch" id="lastPunchText"></div>
+      <div class="last-punch" id="locationText"></div>
+    </div>
+    <button class="admin-link" id="openAdminLink">Admin log</button>
+  </div>
+  <div id="lockView" class="hidden">
+    <div class="lock">
+      <label for="passcodeInput">Admin passcode</label>
+      <input type="text" id="passcodeInput" inputmode="numeric" placeholder="Enter passcode">
+      <button class="btn-small" id="unlockBtn" style="width:100%">Unlock</button>
+      <button class="admin-link" id="backToClockLink" style="display:block;margin-top:10px;">Back to clock</button>
+    </div>
+  </div>
+  <div id="admin" class="hidden">
+    <div class="admin-header">
+      <h2>Time log</h2>
+      <div class="admin-controls">
+        <input type="date" id="dateFilter">
+        <button class="btn-small" id="exportBtn">Export CSV</button>
+        <button class="btn-small" id="backToClockBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="logTableWrap"></div>
+    <div class="totals" id="totalsWrap"></div>
+  </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA2OrNhjacQnFXvYhdg8w7UzRmzZmbJ2Co",
+  authDomain: "me-clock-in-21c19.firebaseapp.com",
+  projectId: "me-clock-in-21c19",
+  storageBucket: "me-clock-in-21c19.firebasestorage.app",
+  messagingSenderId: "281067870585",
+  appId: "1:281067870585:web:df22d315d369eba1a7b7a8"
+};
+const EMPLOYEES = ["James Hernandez", "Manuel Villa", "Lupe Peña", "Manuel Ybarra", "Adrian Corrales"];
+const ADMIN_PASSCODE = "8420";
+const JOB_SITE = { lat: 31.9544113, lng: -101.8365136 };
+const RADIUS_FEET = 300;
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const punches = db.collection("punches");
+const statusCol = db.collection("status");
+const employeeSelect = document.getElementById("employeeSelect");
+const statusText = document.getElementById("statusText");
+const punchBtn = document.getElementById("punchBtn");
+const lastPunchText = document.getElementById("lastPunchText");
+[...EMPLOYEES].sort((a, b) => a.localeCompare(b)).forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name; opt.textContent = name;
+  employeeSelect.appendChild(opt);
+});
+const savedName = localStorage.getItem("tc_employee");
+if (savedName && EMPLOYEES.includes(savedName)) employeeSelect.value = savedName;
+let currentStatus = null;
+let lastPunchDeviceId = null;
+let hasError = false;
+let locState = "checking";
+let locDistanceFt = null;
+const locationText = document.getElementById("locationText");
+function getDeviceId() {
+  let id = localStorage.getItem("tc_device_id");
+  if (!id) {
+    id = window.crypto && crypto.randomUUID ? crypto.randomUUID() : "dev-" + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem("tc_device_id", id);
+  }
+  return id;
+}
+const deviceId = getDeviceId();
+function fmtTime(ts) { return ts.toDate().toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }); }
+function distanceFeet(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c * 3.28084;
+}
+function renderLocationText() {
+  if (locState === "checking") { locationText.textContent = "Checking your location…"; return; }
+  if (locState === "denied") { locationText.textContent = "Location access is off — turn it on in your phone settings to clock in/out."; return; }
+  if (locState === "error") { locationText.textContent = "Couldn't get your location. Tap the button to try again."; return; }
+  if (locState === "out") { locationText.textContent = `You're ${locDistanceFt} ft from the job site — must be within ${RADIUS_FEET} ft.`; return; }
+  locationText.textContent = `At job site (${locDistanceFt} ft away)`;
+}
+function checkLocation() {
+  locState = "checking";
+  renderLocationText();
+  renderButton();
+  if (!navigator.geolocation) { locState = "error"; renderLocationText(); renderButton(); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const dist = distanceFeet(pos.coords.latitude, pos.coords.longitude, JOB_SITE.lat, JOB_SITE.lng);
+      locDistanceFt = Math.round(dist);
+      locState = dist <= RADIUS_FEET ? "ok" : "out";
+      renderLocationText(); renderButton();
+    },
+    err => {
+      console.error(err);
+      locState = err.code === 1 ? "denied" : "error";
+      renderLocationText(); renderButton();
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+}
+async function refreshStatus() {
+  hasError = false;
+  punchBtn.disabled = true;
+  punchBtn.textContent = "Loading…";
+  const name = employeeSelect.value;
+  localStorage.setItem("tc_employee", name);
+  try {
+    const doc = await statusCol.doc(name).get();
+    let statusData = doc.exists ? doc.data() : null;
+    if (!statusData) {
+      const snap = await punches.where("name", "==", name).get();
+      let last = null;
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.timestamp && (!last || data.timestamp.toMillis() > last.timestamp.toMillis())) last = data;
+      });
+      if (last) {
+        statusData = last;
+        statusCol.doc(name).set(statusData).catch(() => {});
+      }
+    }
+    if (!statusData) {
+      currentStatus = "out"; lastPunchDeviceId = null;
+      statusText.textContent = "Not clocked in"; lastPunchText.textContent = "";
+    } else {
+      currentStatus = statusData.action;
+      lastPunchDeviceId = statusData.deviceId || null;
+      statusText.textContent = statusData.action === "in" ? "Clocked in" : "Clocked out";
+      lastPunchText.textContent = statusData.timestamp
+        ? "Last: " + statusData.action.toUpperCase() + " at " + fmtTime(statusData.timestamp)
+        : "";
+    }
+    renderButton();
+  } catch (err) {
+    console.error(err);
+    hasError = true;
+    statusText.textContent = "Couldn't connect";
+    lastPunchText.textContent = err.code ? "(" + err.code + ")" : "";
+    renderButton();
+  }
+}
+function renderButton() {
+  if (hasError) { punchBtn.disabled = false; punchBtn.textContent = "Tap to retry"; punchBtn.className = "punch out"; return; }
+  if (locState === "checking") { punchBtn.disabled = true; punchBtn.textContent = "Checking location…"; punchBtn.className = "punch in"; return; }
+  if (locState === "denied" || locState === "error") { punchBtn.disabled = false; punchBtn.textContent = "Enable location & retry"; punchBtn.className = "punch out"; return; }
+  if (locState === "out") { punchBtn.disabled = false; punchBtn.textContent = "Check location again"; punchBtn.className = "punch out"; return; }
+  if (currentStatus === null) { punchBtn.disabled = true; punchBtn.textContent = "Loading…"; punchBtn.className = "punch in"; return; }
+  punchBtn.disabled = false;
+  if (currentStatus === "in") { punchBtn.textContent = "Clock Out"; punchBtn.className = "punch out"; }
+  else { punchBtn.textContent = "Clock In"; punchBtn.className = "punch in"; }
+}
+punchBtn.addEventListener("click", () => {
+  if (hasError) { refreshStatus(); return; }
+  if (locState === "denied" || locState === "error" || locState === "out") { checkLocation(); return; }
+  if (locState === "checking") { return; }
+  const name = employeeSelect.value;
+  const action = currentStatus === "in" ? "out" : "in";
+  if (action === "out" && lastPunchDeviceId && lastPunchDeviceId !== deviceId) {
+    statusText.textContent = "Locked to another device";
+    lastPunchText.textContent = name + " has to clock out from the phone they clocked in on.";
+    return;
+  }
+  punchBtn.disabled = true;
+  punchBtn.textContent = "Checking location…";
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const dist = distanceFeet(pos.coords.latitude, pos.coords.longitude, JOB_SITE.lat, JOB_SITE.lng);
+      if (dist > RADIUS_FEET) {
+        locState = "out"; locDistanceFt = Math.round(dist);
+        renderLocationText(); renderButton();
+        return;
+      }
+      punchBtn.textContent = "Saving…";
+      try {
+        const payload = { name, action, timestamp: firebase.firestore.FieldValue.serverTimestamp(), lat: pos.coords.latitude, lng: pos.coords.longitude, deviceId };
+        const batch = db.batch();
+        batch.set(punches.doc(), payload);
+        batch.set(statusCol.doc(name), payload);
+        await batch.commit();
+        await refreshStatus();
+      } catch (err) {
+        punchBtn.textContent = "Couldn't save — tap to retry"; punchBtn.disabled = false; console.error(err);
+      }
+    },
+    err => {
+      console.error(err);
+      locState = err.code === 1 ? "denied" : "error";
+      renderLocationText(); renderButton();
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+});
+employeeSelect.addEventListener("change", refreshStatus);
+refreshStatus();
+checkLocation();
+const clockView = document.getElementById("clockView");
+const lockView = document.getElementById("lockView");
+const adminView = document.getElementById("admin");
+const openAdminLink = document.getElementById("openAdminLink");
+const backToClockLink = document.getElementById("backToClockLink");
+const backToClockBtn = document.getElementById("backToClockBtn");
+const passcodeInput = document.getElementById("passcodeInput");
+const unlockBtn = document.getElementById("unlockBtn");
+const dateFilter = document.getElementById("dateFilter");
+const logTableWrap = document.getElementById("logTableWrap");
+const totalsWrap = document.getElementById("totalsWrap");
+const exportBtn = document.getElementById("exportBtn");
+function showView(view) {
+  clockView.classList.add("hidden"); lockView.classList.add("hidden"); adminView.classList.add("hidden");
+  view.classList.remove("hidden");
+}
+openAdminLink.addEventListener("click", () => showView(lockView));
+backToClockLink.addEventListener("click", () => showView(clockView));
+backToClockBtn.addEventListener("click", () => showView(clockView));
+unlockBtn.addEventListener("click", () => {
+  if (passcodeInput.value === ADMIN_PASSCODE) {
+    passcodeInput.value = "";
+    const today = new Date();
+    dateFilter.value = today.toISOString().slice(0, 10);
+    showView(adminView); loadLog();
+  } else {
+    passcodeInput.value = ""; passcodeInput.placeholder = "Wrong passcode — try again";
+  }
+});
+let currentRows = [];
+async function loadLog() {
+  logTableWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  totalsWrap.innerHTML = "";
+  const day = dateFilter.value;
+  const start = new Date(day + "T00:00:00");
+  const end = new Date(day + "T23:59:59.999");
+  try {
+    const snap = await punches.where("timestamp", ">=", start).where("timestamp", "<=", end).orderBy("timestamp", "asc").get();
+    currentRows = snap.docs.map(d => d.data());
+    renderTable(currentRows);
+  } catch (err) {
+    console.error(err);
+    logTableWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+function computeHours(events) {
+  let totalMs = 0; let openIn = null;
+  events.forEach(e => {
+    if (e.action === "in") { openIn = e.timestamp.toDate(); }
+    else if (e.action === "out" && openIn) { totalMs += e.timestamp.toDate() - openIn; openIn = null; }
+  });
+  const hours = (totalMs / 3600000).toFixed(2);
+  return openIn ? hours + " hrs (still clocked in)" : hours + " hrs";
+}
+function renderTable(rows) {
+  if (!rows.length) { logTableWrap.innerHTML = "<div class=\"empty\">No punches on this date.</div>"; return; }
+  const byEmployee = {};
+  rows.forEach(r => { if (!byEmployee[r.name]) byEmployee[r.name] = []; byEmployee[r.name].push(r); });
+  const names = Object.keys(byEmployee).sort();
+  let html = "";
+  names.forEach(name => {
+    const events = byEmployee[name];
+    html += `<div class="emp-group"><div class="emp-header"><h3 class="emp-name">${escapeHtml(name)}</h3><span class="emp-hours">${computeHours(events)}</span></div>`;
+    html += "<table><thead><tr><th>Action</th><th>Time</th><th>Location</th></tr></thead><tbody>";
+    events.forEach(r => {
+      const t = r.timestamp ? r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
+      const loc = (r.lat != null && r.lng != null) ? `<a href="https://maps.google.com/?q=${r.lat},${r.lng}" target="_blank" rel="noopener">Map</a>` : "—";
+      html += `<tr><td><span class="tag ${r.action}">${r.action.toUpperCase()}</span></td><td>${t}</td><td>${loc}</td></tr>`;
+    });
+    html += "</tbody></table></div>";
+  });
+  logTableWrap.innerHTML = html;
+}
+dateFilter.addEventListener("change", loadLog);
+exportBtn.addEventListener("click", () => {
+  if (!currentRows.length) return;
+  let csv = "Employee,Action,Timestamp,Latitude,Longitude\n";
+  currentRows.forEach(r => {
+    const iso = r.timestamp ? r.timestamp.toDate().toISOString() : "";
+    csv += `"${r.name.replace(/"/g, '""')}",${r.action},${iso},${r.lat ?? ""},${r.lng ?? ""}\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `time-log-${dateFilter.value}.csv`; a.click();
+  URL.revokeObjectURL(url);
+});
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+</script>
+</body>
+</html>
