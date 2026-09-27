@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Time Clock</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root {
+    --ink: #1c231f; --paper: #f6f5f1; --line: #dcd9d0;
+    --teal: #10534a; --teal-dark: #0b3b34; --amber: #c9862a; --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--paper); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 48px; }
+  .brand { font-size: 15px; letter-spacing: 0.02em; color: #6b7268; margin-bottom: 28px; }
+  .card { width: 100%; max-width: 380px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px 24px; }
+  label { display: block; font-size: 13px; color: #6b7268; margin-bottom: 6px; }
+  select, input[type="text"], input[type="password"] {
+    width: 100%; font-size: 17px; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--paper); color: var(--ink); margin-bottom: 20px;
+  }
+  select:focus, input:focus, button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  textarea {
+    width: 100%; font-size: 15px; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--paper); color: var(--ink); margin-bottom: 12px;
+    font-family: inherit; resize: vertical;
+  }
+  input[type="file"] { width: 100%; font-size: 14px; margin-bottom: 8px; }
+  .field-error { color: var(--danger); font-size: 13px; margin: -8px 0 12px; }
+  .status-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; font-size: 14px; color: #6b7268; }
+  .status-row strong { color: var(--ink); }
+  button.punch { width: 100%; border: none; border-radius: 12px; padding: 20px; font-size: 19px; font-weight: 600; color: #fff; cursor: pointer; transition: transform 0.06s ease; }
+  button.punch:active { transform: scale(0.98); }
+  button.punch.in { background: var(--teal); }
+  button.punch.in:hover { background: var(--teal-dark); }
+  button.punch.out { background: var(--amber); }
+  button.punch:disabled { background: #b7bcb4; cursor: default; }
+  .last-punch { text-align: center; font-size: 13px; color: #6b7268; margin-top: 16px; min-height: 16px; }
+  .admin-link { margin-top: 28px; font-size: 13px; color: #8a8f85; text-decoration: underline; background: none; border: none; cursor: pointer; padding: 8px; }
+  #admin, #myHoursView { width: 100%; max-width: 720px; }
+  .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; flex-wrap: wrap; }
+  .admin-header h2 { font-size: 20px; margin: 0; }
+  .admin-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .admin-controls input[type="date"] { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
+  .btn-small { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; font-size: 14px; cursor: pointer; color: var(--ink); }
+  .btn-small:hover { background: var(--paper); }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  thead th { text-align: left; font-size: 12px; color: #6b7268; padding: 10px 14px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  tbody td { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+  tbody tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .tag.in { background: #e3efe9; color: var(--teal-dark); }
+  .tag.out { background: #f6e9d6; color: #8a5a1c; }
+  .emp-group { margin-bottom: 20px; }
+  .emp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .emp-name { font-size: 15px; margin: 0; }
+  .emp-hours { font-size: 13px; color: #6b7268; }
+  .empty { text-align: center; color: #8a8f85; padding: 40px 0; font-size: 14px; }
+  .hidden { display: none !important; }
+  .lock { max-width: 320px; width: 100%; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .lock input { margin-bottom: 14px; }
+</style>
+</head>
+<body>
+  <div id="clockView">
+    <div class="brand">Time Clock</div>
+    <div class="card">
+      <label for="employeeSelect">Employee</label>
+      <select id="employeeSelect"></select>
+
+      <button class="btn-small" id="uploadPhotoBtn" style="width:100%;margin-bottom:20px;">Upload field ticket photo</button>
+
+      <div class="status-row"><span>Current status</span><strong id="statusText">—</strong></div>
+      <button id="punchBtn" class="punch in" disabled>Loading…</button>
+      <div class="last-punch" id="lastPunchText"></div>
+      <div class="last-punch" id="locationText"></div>
+    </div>
+    <button class="admin-link" id="setupFingerprintBtn" style="display:none;"></button>
+    <button class="admin-link" id="myHoursLink">My hours</button>
+    <button class="admin-link" id="myUploadsLink">My uploads</button>
+    <button class="admin-link" id="openAdminLink">Admin log</button>
+  </div>
+
+  <div id="pinView" class="hidden">
+    <div class="lock">
+      <label for="employeePinInput" id="pinPromptLabel">Enter your 4-digit code</label>
+      <input type="password" id="employeePinInput" inputmode="numeric" maxlength="4" placeholder="••••">
+      <button class="btn-small" id="pinConfirmBtn" style="width:100%">Confirm</button>
+      <button class="admin-link" id="pinCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="reportView" class="hidden">
+    <div class="lock">
+      <label for="reportDescription">What did you do today?</label>
+      <textarea id="reportDescription" rows="4" placeholder="Describe today's work…"></textarea>
+      <label for="reportPhotoInput">Field ticket photo (optional)</label>
+      <input type="file" id="reportPhotoInput" accept="image/*">
+      <div id="reportPhotoPreviewWrap"></div>
+      <button class="btn-small" id="reportSubmitBtn" style="width:100%; margin-top:6px;">Submit &amp; clock out</button>
+      <button class="admin-link" id="reportCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="uploadView" class="hidden">
+    <div class="lock">
+      <label for="uploadPhotoInput">Field ticket photo</label>
+      <input type="file" id="uploadPhotoInput" accept="image/*">
+      <div id="uploadPhotoPreviewWrap"></div>
+      <button class="btn-small" id="uploadSubmitBtn" style="width:100%; margin-top:6px;">Save photo</button>
+      <button class="admin-link" id="uploadCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="myUploadsView" class="hidden">
+    <div class="admin-header">
+      <h2 id="myUploadsTitle">My uploads</h2>
+      <div class="admin-controls">
+        <button class="btn-small" id="myUploadsBackBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="myUploadsWrap"></div>
+  </div>
+
+  <div id="myHoursView" class="hidden">
+    <div class="admin-header">
+      <h2 id="myHoursTitle">My hours</h2>
+      <div class="admin-controls">
+        <input type="date" id="myHoursDate">
+        <button class="btn-small" id="myHoursBackBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="myHoursWrap"></div>
+  </div>
+
+  <div id="lockView" class="hidden">
+    <div class="lock">
+      <label for="passcodeInput">Admin passcode</label>
+      <input type="text" id="passcodeInput" inputmode="numeric" placeholder="Enter passcode">
+      <button class="btn-small" id="unlockBtn" style="width:100%">Unlock</button>
+      <button class="admin-link" id="backToClockLink" style="display:block;margin-top:10px;">Back to clock</button>
+    </div>
+  </div>
+
+  <div id="admin" class="hidden">
+    <div class="admin-header">
+      <h2>Time log</h2>
+      <div class="admin-controls">
+        <input type="date" id="dateFilter">
+        <button class="btn-small" id="exportBtn">Export CSV</button>
+        <button class="btn-small" id="backToClockBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="logTableWrap"></div>
+    <div class="totals" id="totalsWrap"></div>
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Field ticket photos</h2>
+    </div>
+    <div id="adminUploadsWrap"></div>
+  </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA2OrNhjacQnFXvYhdg8w7UzRmzZmbJ2Co",
+  authDomain: "me-clock-in-21c19.firebaseapp.com",
+  projectId: "me-clock-in-21c19",
+  storageBucket: "me-clock-in-21c19.firebasestorage.app",
+  messagingSenderId: "281067870585",
+  appId: "1:281067870585:web:df22d315d369eba1a7b7a8"
+};
+const EMPLOYEES = ["James Hernandez", "Manuel Villa", "Lupe Peña", "Manuel Ybarra", "Adrian Corrales"];
+const ADMIN_PASSCODE = "8420";
+const JOB_SITE = { lat: 31.9544113, lng: -101.8365136 };
+const RADIUS_FEET = 300;
+const EMPLOYEE_PINS = {
+  "James Hernandez": "1111",
+  "Manuel Villa": "2222",
+  "Lupe Peña": "3333",
+  "Manuel Ybarra": "4444",
+  "Adrian Corrales": "5555"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const punches = db.collection("punches");
+const statusCol = db.collection("status");
+const uploadsCol = db.collection("uploads");
+const employeeSelect = document.getElementById("employeeSelect");
+const statusText = document.getElementById("statusText");
+const punchBtn = document.getElementById("punchBtn");
+const lastPunchText = document.getElementById("lastPunchText");
+const pinView = document.getElementById("pinView");
+const pinPromptLabel = document.getElementById("pinPromptLabel");
+const employeePinInput = document.getElementById("employeePinInput");
+const pinConfirmBtn = document.getElementById("pinConfirmBtn");
+const pinCancelBtn = document.getElementById("pinCancelBtn");
+const setupFingerprintBtn = document.getElementById("setupFingerprintBtn");
+const reportView = document.getElementById("reportView");
+const reportDescription = document.getElementById("reportDescription");
+const reportPhotoInput = document.getElementById("reportPhotoInput");
+const reportPhotoPreviewWrap = document.getElementById("reportPhotoPreviewWrap");
+const reportSubmitBtn = document.getElementById("reportSubmitBtn");
+const reportCancelBtn = document.getElementById("reportCancelBtn");
+const myHoursLink = document.getElementById("myHoursLink");
+const myHoursView = document.getElementById("myHoursView");
+const myHoursTitle = document.getElementById("myHoursTitle");
+const myHoursDate = document.getElementById("myHoursDate");
+const myHoursWrap = document.getElementById("myHoursWrap");
+const myHoursBackBtn = document.getElementById("myHoursBackBtn");
+const uploadPhotoBtn = document.getElementById("uploadPhotoBtn");
+const uploadView = document.getElementById("uploadView");
+const uploadPhotoInput = document.getElementById("uploadPhotoInput");
+const uploadPhotoPreviewWrap = document.getElementById("uploadPhotoPreviewWrap");
+const uploadSubmitBtn = document.getElementById("uploadSubmitBtn");
+const uploadCancelBtn = document.getElementById("uploadCancelBtn");
+const myUploadsLink = document.getElementById("myUploadsLink");
+const myUploadsView = document.getElementById("myUploadsView");
+const myUploadsTitle = document.getElementById("myUploadsTitle");
+const myUploadsWrap = document.getElementById("myUploadsWrap");
+const myUploadsBackBtn = document.getElementById("myUploadsBackBtn");
+const adminUploadsWrap = document.getElementById("adminUploadsWrap");
+[...EMPLOYEES].sort((a, b) => a.localeCompare(b)).forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name; opt.textContent = name;
+  employeeSelect.appendChild(opt);
+});
+const savedName = localStorage.getItem("tc_employee");
+if (savedName && EMPLOYEES.includes(savedName)) employeeSelect.value = savedName;
+let currentStatus = null;
+let lastPunchDeviceId = null;
+let hasError = false;
+let locState = "checking";
+let locDistanceFt = null;
+const locationText = document.getElementById("locationText");
+function getDeviceId() {
+  let id = localStorage.getItem("tc_device_id");
+  if (!id) {
+    id = window.crypto && crypto.randomUUID ? crypto.randomUUID() : "dev-" + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem("tc_device_id", id);
+  }
+  return id;
+}
+const deviceId = getDeviceId();
+function requestPin(name) {
+  return new Promise(resolve => {
+    pinPromptLabel.textContent = "Enter " + name + "'s 4-digit code";
+    employeePinInput.value = "";
+    employeePinInput.placeholder = "••••";
+    clockView.classList.add("hidden");
+    pinView.classList.remove("hidden");
+    employeePinInput.focus();
+    function cleanup() {
+      pinConfirmBtn.removeEventListener("click", onConfirm);
+      pinCancelBtn.removeEventListener("click", onCancel);
+      pinView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    function onConfirm() {
+      const correct = EMPLOYEE_PINS[name];
+      if (!correct) { employeePinInput.placeholder = "No code set up for this employee"; return; }
+      if (employeePinInput.value.trim() === correct) { cleanup(); resolve(true); }
+      else { employeePinInput.value = ""; employeePinInput.placeholder = "Wrong code — try again"; }
+    }
+    function onCancel() { cleanup(); resolve(false); }
+    pinConfirmBtn.addEventListener("click", onConfirm);
+    pinCancelBtn.addEventListener("click", onCancel);
+  });
+}
+function readAndCompressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const maxW = 1000;
+        const scale = Math.min(1, maxW / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.6));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function requestReport(name) {
+  return new Promise(resolve => {
+    reportDescription.value = "";
+    reportPhotoInput.value = "";
+    reportPhotoPreviewWrap.innerHTML = "";
+    let photoDataUrl = null;
+    let errorEl = null;
+    clockView.classList.add("hidden");
+    reportView.classList.remove("hidden");
+    reportDescription.focus();
+    function showError(msg) {
+      if (!errorEl) {
+        errorEl = document.createElement("div");
+        errorEl.className = "field-error";
+        reportDescription.insertAdjacentElement("afterend", errorEl);
+      }
+      errorEl.textContent = msg;
+    }
+    async function onPhotoChange() {
+      const file = reportPhotoInput.files[0];
+      if (!file) { photoDataUrl = null; reportPhotoPreviewWrap.innerHTML = ""; return; }
+      reportPhotoPreviewWrap.innerHTML = "<p style=\"font-size:13px;color:var(--ink);\">Processing photo…</p>";
+      try {
+        const dataUrl = await readAndCompressImage(file);
+        if (dataUrl.length > 900000) {
+          photoDataUrl = null;
+          reportPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Photo's too large — try taking it from farther away, or skip the photo.</p>";
+        } else {
+          photoDataUrl = dataUrl;
+          reportPhotoPreviewWrap.innerHTML = `<img src="${dataUrl}" style="max-width:100%;border-radius:8px;margin-top:8px;">`;
+        }
+      } catch (err) {
+        console.error(err);
+        photoDataUrl = null;
+        reportPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Couldn't read that photo.</p>";
+      }
+    }
+    function cleanup() {
+      reportSubmitBtn.removeEventListener("click", onSubmit);
+      reportCancelBtn.removeEventListener("click", onCancel);
+      reportPhotoInput.removeEventListener("change", onPhotoChange);
+      if (errorEl) errorEl.remove();
+      reportView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    function onSubmit() {
+      const desc = reportDescription.value.trim();
+      if (!desc) { showError("Enter a description of today's work first."); return; }
+      const result = { description: desc, photo: photoDataUrl };
+      cleanup();
+      resolve(result);
+    }
+    function onCancel() { cleanup(); resolve(null); }
+    reportPhotoInput.addEventListener("change", onPhotoChange);
+    reportSubmitBtn.addEventListener("click", onSubmit);
+    reportCancelBtn.addEventListener("click", onCancel);
+  });
+}
+function requestUploadPhoto() {
+  return new Promise(resolve => {
+    uploadPhotoInput.value = "";
+    uploadPhotoPreviewWrap.innerHTML = "";
+    let photoDataUrl = null;
+    let errorEl = null;
+    clockView.classList.add("hidden");
+    uploadView.classList.remove("hidden");
+    function showError(msg) {
+      if (!errorEl) {
+        errorEl = document.createElement("div");
+        errorEl.className = "field-error";
+        uploadPhotoPreviewWrap.insertAdjacentElement("afterend", errorEl);
+      }
+      errorEl.textContent = msg;
+    }
+    async function onPhotoChange() {
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      const file = uploadPhotoInput.files[0];
+      if (!file) { photoDataUrl = null; uploadPhotoPreviewWrap.innerHTML = ""; return; }
+      uploadPhotoPreviewWrap.innerHTML = "<p style=\"font-size:13px;color:var(--ink);\">Processing photo…</p>";
+      try {
+        const dataUrl = await readAndCompressImage(file);
+        if (dataUrl.length > 900000) {
+          photoDataUrl = null;
+          uploadPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Photo's too large — try taking it from farther away.</p>";
+        } else {
+          photoDataUrl = dataUrl;
+          uploadPhotoPreviewWrap.innerHTML = `<img src="${dataUrl}" style="max-width:100%;border-radius:8px;margin-top:8px;">`;
+        }
+      } catch (err) {
+        console.error(err);
+        photoDataUrl = null;
+        uploadPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Couldn't read that photo.</p>";
+      }
+    }
+    function cleanup() {
+      uploadSubmitBtn.removeEventListener("click", onSubmit);
+      uploadCancelBtn.removeEventListener("click", onCancel);
+      uploadPhotoInput.removeEventListener("change", onPhotoChange);
+      if (errorEl) errorEl.remove();
+      uploadView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    function onSubmit() {
+      if (!photoDataUrl) { showError("Choose a photo first."); return; }
+      const result = photoDataUrl;
+      cleanup();
+      resolve(result);
+    }
+    function onCancel() { cleanup(); resolve(null); }
+    uploadPhotoInput.addEventListener("change", onPhotoChange);
+    uploadSubmitBtn.addEventListener("click", onSubmit);
+    uploadCancelBtn.addEventListener("click", onCancel);
+  });
+}
+uploadPhotoBtn.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const pinOk = await requestPin(name);
+  if (!pinOk) return;
+  const photo = await requestUploadPhoto();
+  if (!photo) return;
+  uploadPhotoBtn.disabled = true;
+  uploadPhotoBtn.textContent = "Saving…";
+  try {
+    await uploadsCol.add({ name, photo, timestamp: firebase.firestore.FieldValue.serverTimestamp(), deviceId });
+    uploadPhotoBtn.textContent = "Photo saved";
+    setTimeout(() => {
+      uploadPhotoBtn.textContent = "Upload field ticket photo";
+      uploadPhotoBtn.disabled = false;
+    }, 1500);
+  } catch (err) {
+    console.error(err);
+    uploadPhotoBtn.textContent = "Couldn't save — tap to retry";
+    uploadPhotoBtn.disabled = false;
+  }
+});
+const WEBAUTHN_SUPPORTED = !!window.PublicKeyCredential;
+function getStoredCredentialId() { return localStorage.getItem("tc_webauthn_cred_id"); }
+async function setupFingerprint() {
+  const challenge = crypto.getRandomValues(new Uint8Array(32));
+  const userId = crypto.getRandomValues(new Uint8Array(16));
+  const cred = await navigator.credentials.create({
+    publicKey: {
+      challenge,
+      rp: { name: "Time Clock" },
+      user: { id: userId, name: "device-user", displayName: "Time Clock device" },
+      pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+      authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+      timeout: 60000
+    }
+  });
+  const id = btoa(String.fromCharCode(...new Uint8Array(cred.rawId)));
+  localStorage.setItem("tc_webauthn_cred_id", id);
+}
+async function verifyFingerprint() {
+  const storedId = getStoredCredentialId();
+  if (!storedId) return true;
+  const idBytes = Uint8Array.from(atob(storedId), c => c.charCodeAt(0));
+  const challenge = crypto.getRandomValues(new Uint8Array(32));
+  await navigator.credentials.get({
+    publicKey: { challenge, allowCredentials: [{ id: idBytes, type: "public-key" }], userVerification: "required", timeout: 60000 }
+  });
+  return true;
+}
+async function initFingerprintUI() {
+  if (!WEBAUTHN_SUPPORTED) return;
+  let available = false;
+  try { available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); } catch (e) {}
+  if (!available) return;
+  setupFingerprintBtn.style.display = "block";
+  if (getStoredCredentialId()) {
+    setupFingerprintBtn.textContent = "Face ID enabled on this phone";
+    setupFingerprintBtn.disabled = true;
+  } else {
+    setupFingerprintBtn.textContent = "Set up Face ID for this phone";
+  }
+}
+setupFingerprintBtn.addEventListener("click", async () => {
+  if (getStoredCredentialId()) return;
+  setupFingerprintBtn.textContent = "Setting up…";
+  try {
+    await setupFingerprint();
+    setupFingerprintBtn.textContent = "Face ID enabled on this phone";
+    setupFingerprintBtn.disabled = true;
+  } catch (err) {
+    console.error(err);
+    setupFingerprintBtn.textContent = "Set up Face ID for this phone";
+  }
+});
+initFingerprintUI();
+function fmtTime(ts) { return ts.toDate().toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" }); }
+function distanceFeet(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c * 3.28084;
+}
+function renderLocationText() {
+  if (locState === "checking") { locationText.textContent = "Checking your location…"; return; }
+  if (locState === "denied") { locationText.textContent = "Location access is off — turn it on in your phone settings to clock in/out."; return; }
+  if (locState === "error") { locationText.textContent = "Couldn't get your location. Tap the button to try again."; return; }
+  if (locState === "out") { locationText.textContent = `You're ${locDistanceFt} ft from the job site — must be within ${RADIUS_FEET} ft.`; return; }
+  locationText.textContent = `At job site (${locDistanceFt} ft away)`;
+}
+function checkLocation() {
+  locState = "checking";
+  renderLocationText(); renderButton();
+  if (!navigator.geolocation) { locState = "error"; renderLocationText(); renderButton(); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const dist = distanceFeet(pos.coords.latitude, pos.coords.longitude, JOB_SITE.lat, JOB_SITE.lng);
+      locDistanceFt = Math.round(dist);
+      locState = dist <= RADIUS_FEET ? "ok" : "out";
+      renderLocationText(); renderButton();
+    },
+    err => { console.error(err); locState = err.code === 1 ? "denied" : "error"; renderLocationText(); renderButton(); },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+}
+async function refreshStatus() {
+  hasError = false;
+  punchBtn.disabled = true;
+  punchBtn.textContent = "Loading…";
+  const name = employeeSelect.value;
+  localStorage.setItem("tc_employee", name);
+  try {
+    const doc = await statusCol.doc(name).get();
+    let statusData = doc.exists ? doc.data() : null;
+    if (!statusData) {
+      const snap = await punches.where("name", "==", name).get();
+      let last = null;
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.timestamp && (!last || data.timestamp.toMillis() > last.timestamp.toMillis())) last = data;
+      });
+      if (last) { statusData = last; statusCol.doc(name).set(statusData).catch(() => {}); }
+    }
+    if (!statusData) {
+      currentStatus = "out"; lastPunchDeviceId = null;
+      statusText.textContent = "Not clocked in"; lastPunchText.textContent = "";
+    } else {
+      currentStatus = statusData.action;
+      lastPunchDeviceId = statusData.deviceId || null;
+      statusText.textContent = statusData.action === "in" ? "Clocked in" : "Clocked out";
+      lastPunchText.textContent = statusData.timestamp ? "Last: " + statusData.action.toUpperCase() + " at " + fmtTime(statusData.timestamp) : "";
+    }
+    renderButton();
+  } catch (err) {
+    console.error(err);
+    hasError = true;
+    statusText.textContent = "Couldn't connect";
+    lastPunchText.textContent = err.code ? "(" + err.code + ")" : "";
+    renderButton();
+  }
+}
+function renderButton() {
+  if (hasError) { punchBtn.disabled = false; punchBtn.textContent = "Tap to retry"; punchBtn.className = "punch out"; return; }
+  if (locState === "checking") { punchBtn.disabled = true; punchBtn.textContent = "Checking location…"; punchBtn.className = "punch in"; return; }
+  if (locState === "denied" || locState === "error") { punchBtn.disabled = false; punchBtn.textContent = "Enable location & retry"; punchBtn.className = "punch out"; return; }
+  if (locState === "out") { punchBtn.disabled = false; punchBtn.textContent = "Check location again"; punchBtn.className = "punch out"; return; }
+  if (currentStatus === null) { punchBtn.disabled = true; punchBtn.textContent = "Loading…"; punchBtn.className = "punch in"; return; }
+  punchBtn.disabled = false;
+  if (currentStatus === "in") { punchBtn.textContent = "Clock Out"; punchBtn.className = "punch out"; }
+  else { punchBtn.textContent = "Clock In"; punchBtn.className = "punch in"; }
+}
+punchBtn.addEventListener("click", async () => {
+  if (hasError) { refreshStatus(); return; }
+  if (locState === "denied" || locState === "error" || locState === "out") { checkLocation(); return; }
+  if (locState === "checking") { return; }
+  const name = employeeSelect.value;
+  const action = currentStatus === "in" ? "out" : "in";
+  if (action === "out" && lastPunchDeviceId && lastPunchDeviceId !== deviceId) {
+    statusText.textContent = "Locked to another device";
+    lastPunchText.textContent = name + " has to clock out from the phone they clocked in on.";
+    return;
+  }
+  const pinOk = await requestPin(name);
+  if (!pinOk) return;
+  if (getStoredCredentialId()) {
+    try { await verifyFingerprint(); }
+    catch (err) {
+      console.error(err);
+      statusText.textContent = "Face ID not confirmed";
+      lastPunchText.textContent = "Try again to clock " + action + ".";
+      return;
+    }
+  }
+  punchBtn.disabled = true;
+  punchBtn.textContent = "Checking location…";
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const dist = distanceFeet(pos.coords.latitude, pos.coords.longitude, JOB_SITE.lat, JOB_SITE.lng);
+      if (dist > RADIUS_FEET) {
+        locState = "out"; locDistanceFt = Math.round(dist);
+        renderLocationText(); renderButton();
+        return;
+      }
+      let report = null;
+      if (action === "out") {
+        report = await requestReport(name);
+        if (!report) { renderButton(); return; }
+      }
+      punchBtn.textContent = "Saving…";
+      try {
+        const payload = { name, action, timestamp: firebase.firestore.FieldValue.serverTimestamp(), lat: pos.coords.latitude, lng: pos.coords.longitude, deviceId };
+        if (report) {
+          payload.description = report.description;
+          if (report.photo) payload.photo = report.photo;
+        }
+        const batch = db.batch();
+        batch.set(punches.doc(), payload);
+        batch.set(statusCol.doc(name), payload);
+        await batch.commit();
+        await refreshStatus();
+      } catch (err) {
+        punchBtn.textContent = "Couldn't save — tap to retry"; punchBtn.disabled = false; console.error(err);
+      }
+    },
+    err => { console.error(err); locState = err.code === 1 ? "denied" : "error"; renderLocationText(); renderButton(); },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+});
+employeeSelect.addEventListener("change", refreshStatus);
+refreshStatus();
+checkLocation();
+myHoursLink.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const ok = await requestPin(name);
+  if (!ok) return;
+  myHoursTitle.textContent = name + "'s hours";
+  const today = new Date();
+  myHoursDate.value = today.toISOString().slice(0, 10);
+  clockView.classList.add("hidden");
+  myHoursView.classList.remove("hidden");
+  loadMyHours(name, myHoursDate.value);
+});
+myHoursDate.addEventListener("change", () => loadMyHours(employeeSelect.value, myHoursDate.value));
+myHoursBackBtn.addEventListener("click", () => {
+  myHoursView.classList.add("hidden");
+  clockView.classList.remove("hidden");
+});
+myUploadsLink.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const ok = await requestPin(name);
+  if (!ok) return;
+  myUploadsTitle.textContent = name + "'s uploads";
+  clockView.classList.add("hidden");
+  myUploadsView.classList.remove("hidden");
+  loadMyUploads(name);
+});
+myUploadsBackBtn.addEventListener("click", () => {
+  myUploadsView.classList.add("hidden");
+  clockView.classList.remove("hidden");
+});
+async function loadMyUploads(name) {
+  myUploadsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await uploadsCol.where("name", "==", name).get();
+    const rows = [];
+    snap.forEach(d => { const data = d.data(); if (data.timestamp) rows.push(data); });
+    rows.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
+    if (!rows.length) { myUploadsWrap.innerHTML = "<div class=\"empty\">No photos uploaded yet.</div>"; return; }
+    let html = "";
+    rows.forEach(r => {
+      const t = r.timestamp.toDate().toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+      html += `<div style="margin-bottom:16px;"><p style="font-size:13px;color:var(--ink);margin:0 0 6px;">${t}</p><img src="${r.photo}" style="max-width:100%;border-radius:8px;"></div>`;
+    });
+    myUploadsWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    myUploadsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+async function loadMyHours(name, dateStr) {
+  myHoursWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await punches.where("name", "==", name).get();
+    const start = new Date(dateStr + "T00:00:00");
+    const end = new Date(dateStr + "T23:59:59.999");
+    const rows = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.timestamp && data.timestamp.toDate() >= start && data.timestamp.toDate() <= end) rows.push(data);
+    });
+    rows.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+    if (!rows.length) { myHoursWrap.innerHTML = "<div class=\"empty\">No punches on this date.</div>"; return; }
+    let html = "<table><thead><tr><th>Action</th><th>Time</th></tr></thead><tbody>";
+    rows.forEach(r => {
+      const t = r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      html += `<tr><td><span class="tag ${r.action}">${r.action.toUpperCase()}</span></td><td>${t}</td></tr>`;
+    });
+    html += "</tbody></table>";
+    const withNotes = rows.filter(r => r.description);
+    if (withNotes.length) {
+      html += "<div class=\"totals\"><h3>Work summary</h3>";
+      withNotes.forEach(r => {
+        const t = r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        html += `<div style="padding:10px 0;border-bottom:1px solid var(--line);"><strong>${t}</strong><p style="margin:4px 0;">${escapeHtml(r.description)}</p>`;
+        if (r.photo) html += `<img src="${r.photo}" style="max-width:100%;border-radius:8px;margin-top:6px;">`;
+        html += "</div>";
+      });
+      html += "</div>";
+    }
+    myHoursWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    myHoursWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+const clockView = document.getElementById("clockView");
+const lockView = document.getElementById("lockView");
+const adminView = document.getElementById("admin");
+const openAdminLink = document.getElementById("openAdminLink");
+const backToClockLink = document.getElementById("backToClockLink");
+const backToClockBtn = document.getElementById("backToClockBtn");
+const passcodeInput = document.getElementById("passcodeInput");
+const unlockBtn = document.getElementById("unlockBtn");
+const dateFilter = document.getElementById("dateFilter");
+const logTableWrap = document.getElementById("logTableWrap");
+const totalsWrap = document.getElementById("totalsWrap");
+const exportBtn = document.getElementById("exportBtn");
+function showView(view) {
+  clockView.classList.add("hidden"); lockView.classList.add("hidden"); adminView.classList.add("hidden");
+  view.classList.remove("hidden");
+}
+openAdminLink.addEventListener("click", () => showView(lockView));
+backToClockLink.addEventListener("click", () => showView(clockView));
+backToClockBtn.addEventListener("click", () => showView(clockView));
+unlockBtn.addEventListener("click", () => {
+  if (passcodeInput.value === ADMIN_PASSCODE) {
+    passcodeInput.value = "";
+    const today = new Date();
+    dateFilter.value = today.toISOString().slice(0, 10);
+    showView(adminView);
+    loadLog();
+    loadAdminUploads();
+  } else {
+    passcodeInput.value = ""; passcodeInput.placeholder = "Wrong passcode — try again";
+  }
+});
+let currentRows = [];
+async function loadLog() {
+  logTableWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  totalsWrap.innerHTML = "";
+  const day = dateFilter.value;
+  const start = new Date(day + "T00:00:00");
+  const end = new Date(day + "T23:59:59.999");
+  try {
+    const snap = await punches.where("timestamp", ">=", start).where("timestamp", "<=", end).orderBy("timestamp", "asc").get();
+    currentRows = snap.docs.map(d => d.data());
+    renderTable(currentRows);
+  } catch (err) {
+    console.error(err);
+    logTableWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+function computeHours(events) {
+  let totalMs = 0; let openIn = null;
+  events.forEach(e => {
+    if (e.action === "in") { openIn = e.timestamp.toDate(); }
+    else if (e.action === "out" && openIn) { totalMs += e.timestamp.toDate() - openIn; openIn = null; }
+  });
+  const hours = (totalMs / 3600000).toFixed(2);
+  return openIn ? hours + " hrs (still clocked in)" : hours + " hrs";
+}
+function renderTable(rows) {
+  if (!rows.length) { logTableWrap.innerHTML = "<div class=\"empty\">No punches on this date.</div>"; return; }
+  const byEmployee = {};
+  rows.forEach(r => { if (!byEmployee[r.name]) byEmployee[r.name] = []; byEmployee[r.name].push(r); });
+  const names = Object.keys(byEmployee).sort();
+  let html = "";
+  names.forEach(name => {
+    const events = byEmployee[name];
+    html += `<div class="emp-group"><div class="emp-header"><h3 class="emp-name">${escapeHtml(name)}</h3><span class="emp-hours">${computeHours(events)}</span></div>`;
+    html += "<table><thead><tr><th>Action</th><th>Time</th><th>Location</th></tr></thead><tbody>";
+    events.forEach(r => {
+      const t = r.timestamp ? r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
+      const loc = (r.lat != null && r.lng != null) ? `<a href="https://maps.google.com/?q=${r.lat},${r.lng}" target="_blank" rel="noopener">Map</a>` : "—";
+      html += `<tr><td><span class="tag ${r.action}">${r.action.toUpperCase()}</span></td><td>${t}</td><td>${loc}</td></tr>`;
+    });
+    html += "</tbody></table></div>";
+  });
+  logTableWrap.innerHTML = html;
+}
+dateFilter.addEventListener("change", loadLog);
+exportBtn.addEventListener("click", () => {
+  if (!currentRows.length) return;
+  let csv = "Employee,Action,Timestamp,Latitude,Longitude\n";
+  currentRows.forEach(r => {
+    const iso = r.timestamp ? r.timestamp.toDate().toISOString() : "";
+    csv += `"${r.name.replace(/"/g, '""')}",${r.action},${iso},${r.lat ?? ""},${r.lng ?? ""}\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `time-log-${dateFilter.value}.csv`; a.click();
+  URL.revokeObjectURL(url);
+});
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+async function loadAdminUploads() {
+  adminUploadsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await uploadsCol.orderBy("timestamp", "desc").limit(100).get();
+    if (snap.empty) { adminUploadsWrap.innerHTML = "<div class=\"empty\">No photos uploaded yet.</div>"; return; }
+    let html = "";
+    snap.forEach(d => {
+      const r = d.data();
+      const t = r.timestamp ? r.timestamp.toDate().toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+      html += `<div style="margin-bottom:16px;"><p style="font-size:13px;color:var(--ink);margin:0 0 6px;"><strong>${escapeHtml(r.name)}</strong> — ${t}</p><img src="${r.photo}" style="max-width:100%;border-radius:8px;"></div>`;
+    });
+    adminUploadsWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    adminUploadsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+</script>
+</body>
+</html>
