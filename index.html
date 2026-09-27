@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Time Clock</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f3f5f8;
+      color: #192438;
+      font: 16px Arial, sans-serif;
+    }
+    main {
+      max-width: 760px;
+      margin: 40px auto;
+    }
+    section {
+      background: white;
+      padding: 24px;
+      margin-bottom: 18px;
+      border: 1px solid #e2e7ee;
+      border-radius: 14px;
+    }
+    input, button {
+      box-sizing: border-box;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 8px;
+      font: inherit;
+    }
+    input { width: 100%; border: 1px solid #ccd4df; }
+    button {
+      border: 0;
+      color: white;
+      background: #1e63c6;
+      cursor: pointer;
+    }
+    button.secondary { background: #526176; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .error { color: #a22; }
+    .muted { color: #657186; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 6px; border-bottom: 1px solid #e8ebf0; text-align: left; }
+  </style>
+</head>
+<body>
+<main>
+  <section>
+    <h1>Employee Time Clock</h1>
+    <p id="status" class="muted">Sign in to clock in or out.</p>
+    <form id="auth-form">
+      <input id="email" type="email" placeholder="Employee email" required>
+      <input id="password" type="password" placeholder="Password (at least 8 characters)"
+             minlength="8" required>
+      <div class="row">
+        <button type="submit">Sign in</button>
+        <button type="button" class="secondary" id="signup">Create account</button>
+        <button type="button" class="secondary" id="signout" hidden>Sign out</button>
+      </div>
+    </form>
+    <p id="message" class="error"></p>
+  </section>
+
+  <section id="clock-panel" hidden>
+    <h2>Shift</h2>
+    <p id="shift-status">Loading…</p>
+    <button id="punch">Clock in</button>
+  </section>
+
+  <section id="history-panel" hidden>
+    <h2>Recent shifts</h2>
+    <table>
+      <thead><tr><th>Clock in</th><th>Clock out</th><th>Duration</th></tr></thead>
+      <tbody id="history"></tbody>
+    </table>
+  </section>
+</main>
+
+<script type="module">
+  import { createClient } from
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+  // Replace these with your Supabase Project URL and publishable/anon key.
+  const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+  const SUPABASE_KEY = 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY';
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const $ = id => document.getElementById(id);
+  let session = null;
+  let activeShift = null;
+
+  function showMessage(text = '') {
+    $('message').textContent = text;
+  }
+
+  function time(value) {
+    if (!value) return '—';
+    return new Date(value).toLocaleString();
+  }
+
+  function elapsed(start, end) {
+    if (!start) return '—';
+    const minutes = Math.floor(
+      (new Date(end || Date.now()) - new Date(start)) / 60000
+    );
+    return `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m`;
+  }
+
+  async function loadShifts() {
+    if (!session) return;
+
+    const { data, error } = await db
+      .from('time_entries')
+      .select('id, clock_in_at, clock_out_at')
+      .order('clock_in_at', { ascending: false })
+      .limit(100);
+
+    if (error) {
+      showMessage(error.message);
+      return;
+    }
+
+    activeShift = data.find(shift => !shift.clock_out_at) || null;
+    $('shift-status').textContent = activeShift
+      ? `Clocked in since ${time(activeShift.clock_in_at)} (${elapsed(activeShift.clock_in_at)} elapsed)`
+      : 'You are clocked out.';
+
+    $('punch').textContent = activeShift ? 'Clock out' : 'Clock in';
+    $('punch').dataset.action = activeShift ? 'clock_out' : 'clock_in';
+
+    $('history').innerHTML = data.map(shift => `
+      <tr>
+        <td>${time(shift.clock_in_at)}</td>
+        <td>${time(shift.clock_out_at)}</td>
+        <td>${elapsed(shift.clock_in_at, shift.clock_out_at)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function updateScreen(nextSession) {
+    session = nextSession;
+    const signedIn = Boolean(session);
+    $('clock-panel').hidden = !signedIn;
+    $('history-panel').hidden = !signedIn;
+    $('email').hidden = signedIn;
+    $('password').hidden = signedIn;
+    $('auth-form').querySelector('button[type="submit"]').hidden = signedIn;
+    $('signup').hidden = signedIn;
+    $('signout').hidden = !signedIn;
+    $('status').textContent = signedIn
+      ? `Signed in as ${session.user.email}`
+      : 'Sign in to clock in or out.';
+    if (signedIn) loadShifts();
+  }
+
+  $('auth-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    showMessage();
+    const { error } = await db.auth.signInWithPassword({
+      email: $('email').value.trim(),
+      password: $('password').value
+    });
+    if (error) showMessage(error.message);
+  });
+
+  $('signup').addEventListener('click', async () => {
+    showMessage();
+    const { error, data } = await db.auth.signUp({
+      email: $('email').value.trim(),
+      password: $('password').value
+    });
+    if (error) showMessage(error.message);
+    else if (!data.session) showMessage('Check your email to confirm your account, then sign in.');
+  });
+
+  $('signout').addEventListener('click', async () => {
+    const { error } = await db.auth.signOut();
+    if (error) showMessage(error.message);
+  });
+
+  $('punch').addEventListener('click', async () => {
+    showMessage();
+    $('punch').disabled = true;
+    const { error } = await db.rpc($('punch').dataset.action);
+    if (error) showMessage(error.message);
+    await loadShifts();
+    $('punch').disabled = false;
+  });
+
+  const { data } = await db.auth.getSession();
+  updateScreen(data.session);
+
+  db.auth.onAuthStateChange((_event, nextSession) => updateScreen(nextSession));
+</script>
+</body>
+</html>
