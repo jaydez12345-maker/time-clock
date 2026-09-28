@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Time Clock</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AQAAAAAVtjufAAAEpUlEQVR42u2XT2gcdRTHv7+Zye4W18w0Dbgla2aygdCLmhqQbW0zP9squSnYm5UmpRdBJIsHa4lmtgRFUYngwUMkeNGDNh5FiO4kkRrE0rQXjdZ0VvOnSgmzdaGTODPPw+yfmeyuVDyJ+d3msz/e7/3ee9/3fssIzVZJQPO1y3f5f5cbLbh513ZAREQF2rHsYL/Vwg5vwe0WXNNa+GP8jZ9FXQLyUoQfrf7Io/s/BaD4UoOdLqO5fS+4nWdEOV0IIlc2xcpVApN0sR8AIBpIhPa77OFapEN+rq69uxZ82VY1FQKAld5TNgC4AHC6zlU2b2tBNDTarPP02QdgAwzAEb9c5yIeGtOCaN8EC/mT1U0FAKDsuK8VcwAbrg9mhHiPtf18cD+YPMQfXJz4DgCDvSpkQvwOf9QGFEdiCZ4O8Q7wM8GXGTlXiuHx4PxonMXzXQI4DIgcftjPY5nUBzxSFwHvGd6/bgDVzfU89n3yeQW4Yd5+iJ4xICCDaHritPdZug1AKUfsSHyVAYBnwglz8dt8OwC0G/5S5NzzvgJwxDXiYR2RxduotBD3yWSBjiplsd8M6mWn/yJ44JsZ0SMRclQK67Fa2nm/mX6J5sjPNeoXuM+MSr/6kTCa606xoiKu8mTTvkHedt9gPHwuiMhlBoBYAyeLAdBlIiI1zF1DkYmmiciVK5xF57h3j/PP5rjZnItaM04cFlCu8eJI7tBBaS5xe1FCib/Nq1yZTIB7mnt1bALAa1a4jxmj+a/mB5EAJbQaX5KWK9Vp2hYz6/3zFxsJCFA5YqH6tMFhO9MfuUdF/Lgphvpqj4AEXMB/+USgbimQOR96amjkjKmxzt+jfbXNArpRpN43tmHU2xOMcrRB1PLe7wCD8wA8Z7LK7dFxDTgNdQIw8IUW5N0nIndMN51RVyci2gry6AJxsn2ZOdmAV+pwjWg5UWK5mAPDCuVrBlCXMxjOQpoPjYegMjBOZL/aXbcjkQaA0nkYCgmh4nDHicjRbUCkP3bWv2PKFsYixevrRLTQMO/gq0QUb5yDzAa2sgj6ggWYS8FUpDyRSQPHi33CPvnAsacx85JMZAvQ+dZx8lO32Ohwau8kvaigH4CE/rmEihupP8lkeNI21UU3iIMMZkHqaGPcxMgeTRiWKvVAgH/hYucW7ie9h3mHSzMhvdMdogKtEH15uXCjUS//7t1rt+BWfsQgaW6EI+8pQl6r1pU5e+3gKys/fZzClPP9m4laf5DT3apXao9PUzp3ySno1f4gT8VUNzf1mErpnJ91xyv58s6dXN86PHqSvK5bn+05UNPjNpITP1ztS8L97Rxme22jYt9i6Ti9o3fL8jdubkFfqOa9W8i41gs/azCyGuiKVPPn9SNQXZaOq5RyLuFKvU5OvK+x+bPLGp6ThoqRvhpal8N9NbQ6W8SzowVP3v17r6Q155NFpSkvbJSMSH9OBgoqbET6MNFbvaLe/kicNvZF54Wh9APWKWAiar8TPnGYuG7veO7Ym/feHPsQmrTjXadkNHzNIc1G50VmQFTWn2ijXwf0yLnvIVm+rsUBP+K/pzd/l1LDA5Tt/u/b5f8D/heh6fKSR8tQzAAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AQAAAAAVtjufAAAEpUlEQVR42u2XT2gcdRTHv7+Zye4W18w0Dbgla2aygdCLmhqQbW0zP9squSnYm5UmpRdBJIsHa4lmtgRFUYngwUMkeNGDNh5FiO4kkRrE0rQXjdZ0VvOnSgmzdaGTODPPw+yfmeyuVDyJ+d3msz/e7/3ee9/3fssIzVZJQPO1y3f5f5cbLbh513ZAREQF2rHsYL/Vwg5vwe0WXNNa+GP8jZ9FXQLyUoQfrf7Io/s/BaD4UoOdLqO5fS+4nWdEOV0IIlc2xcpVApN0sR8AIBpIhPa77OFapEN+rq69uxZ82VY1FQKAld5TNgC4AHC6zlU2b2tBNDTarPP02QdgAwzAEb9c5yIeGtOCaN8EC/mT1U0FAKDsuK8VcwAbrg9mhHiPtf18cD+YPMQfXJz4DgCDvSpkQvwOf9QGFEdiCZ4O8Q7wM8GXGTlXiuHx4PxonMXzXQI4DIgcftjPY5nUBzxSFwHvGd6/bgDVzfU89n3yeQW4Yd5+iJ4xICCDaHritPdZug1AKUfsSHyVAYBnwglz8dt8OwC0G/5S5NzzvgJwxDXiYR2RxduotBD3yWSBjiplsd8M6mWn/yJ44JsZ0SMRclQK67Fa2nm/mX6J5sjPNeoXuM+MSr/6kTCa606xoiKu8mTTvkHedt9gPHwuiMhlBoBYAyeLAdBlIiI1zF1DkYmmiciVK5xF57h3j/PP5rjZnItaM04cFlCu8eJI7tBBaS5xe1FCib/Nq1yZTIB7mnt1bALAa1a4jxmj+a/mB5EAJbQaX5KWK9Vp2hYz6/3zFxsJCFA5YqH6tMFhO9MfuUdF/Lgphvpqj4AEXMB/+USgbimQOR96amjkjKmxzt+jfbXNArpRpN43tmHU2xOMcrRB1PLe7wCD8wA8Z7LK7dFxDTgNdQIw8IUW5N0nIndMN51RVyci2gry6AJxsn2ZOdmAV+pwjWg5UWK5mAPDCuVrBlCXMxjOQpoPjYegMjBOZL/aXbcjkQaA0nkYCgmh4nDHicjRbUCkP3bWv2PKFsYixevrRLTQMO/gq0QUb5yDzAa2sgj6ggWYS8FUpDyRSQPHi33CPvnAsacx85JMZAvQ+dZx8lO32Ohwau8kvaigH4CE/rmEihupP8lkeNI21UU3iIMMZkHqaGPcxMgeTRiWKvVAgH/hYucW7ie9h3mHSzMhvdMdogKtEH15uXCjUS//7t1rt+BWfsQgaW6EI+8pQl6r1pU5c+3gKys/fZzClPP9m4laf5DT3apXao9PUzp3ySno1f4gT8VUNzf1mErpnJ91xyv58s6dXN86PHqSvK5bn+05UNPjNpITP1ztS8L97Rxme22jYt9r6TL5C9uAyS99xX76+2iBHvSbJDSvJGTPQfXFMXYPu09KuBGL+kTdPQ==">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+<script>
+  const FACE_MODEL_URL = "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+  let faceModelsPromise = null;
+  function ensureFaceModelsLoaded() {
+    if (!faceModelsPromise) {
+      faceModelsPromise = Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODEL_URL),
+        faceapi.nets.faceLandmark68Net.loadFromUri(FACE_MODEL_URL),
+        faceapi.nets.faceRecognitionNet.loadFromUri(FACE_MODEL_URL)
+      ]);
+    }
+    return faceModelsPromise;
+  }
+  // Start loading in the background as soon as the page opens, so it's
+  // hopefully ready by the time someone actually taps Clock In.
+  window.warmupFaceModels = function () { ensureFaceModelsLoaded().catch(() => {}); };
+
+  // Returns: a descriptor array (face found + measured), null (processed fine,
+  // no face in the photo), or undefined (couldn't check at all — e.g. no
+  // signal to load the model). undefined never blocks the punch.
+  window.getFaceDescriptor = async function (dataUrl) {
+    try {
+      await Promise.race([
+        ensureFaceModelsLoaded(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 15000))
+      ]);
+      const img = new Image();
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+      const result = await faceapi
+        .detectSingleFace(img, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+      if (!result) return null;
+      return Array.from(result.descriptor);
+    } catch (err) {
+      console.warn("Face check unavailable, allowing photo through:", err);
+      return undefined;
+    }
+  };
+
+  // Euclidean distance between two face descriptors. Below ~0.6 is
+  // considered the same person by convention for this model.
+  window.faceDistance = function (a, b) {
+    if (!a || !b || a.length !== b.length) return Infinity;
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) { const d = a[i] - b[i]; sum += d * d; }
+    return Math.sqrt(sum);
+  };
+</script>
+<style>
+  :root {
+    --ink: #f1f5f9;
+    --paper: #0a0e1a;
+    --surface: #1a2233;
+    --field: #141b29;
+    --line: #2c3548;
+    --muted: #94a3b8;
+    --blue: #3b82f6;
+    --blue-dark: #2563eb;
+    --red: #e0483c;
+    --red-dark: #b8362c;
+    --danger: #ff6b6b;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  body { display: flex; flex-direction: column; align-items: center; padding: 32px 20px 48px; }
+
+  .brand {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .logo-banner {
+    max-width: 260px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+  }
+
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+  select, input[type="text"], input[type="password"] {
+    width: 100%;
+    font-size: 17px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  select:focus, input:focus, button:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  textarea {
+    width: 100%; font-size: 15px; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--field); color: var(--ink); margin-bottom: 12px;
+    font-family: inherit; resize: vertical;
+  }
+  input[type="file"] { width: 100%; font-size: 14px; margin-bottom: 8px; color: var(--ink); }
+  .field-error { color: var(--danger); font-size: 13px; margin: -8px 0 12px; }
+
+  .status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .status-row strong { color: var(--ink); }
+
+  button.punch {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 19px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.06s ease;
+  }
+  button.punch:active { transform: scale(0.98); }
+  button.punch.in { background: var(--blue); }
+  button.punch.in:hover { background: var(--blue-dark); }
+  button.punch.out { background: var(--red); }
+  button.punch.out:hover { background: var(--red-dark); }
+  button.punch:disabled { background: #4a4a4a; cursor: default; }
+
+  .last-punch {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+    min-height: 16px;
+  }
+
+  .admin-link {
+    margin-top: 28px;
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  /* ---- admin view ---- */
+  #admin, #myHoursView { width: 100%; max-width: 720px; }
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .admin-header h2 { font-size: 20px; margin: 0; color: var(--blue); }
+  .admin-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .admin-controls input[type="date"] {
+    padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px;
+    background: var(--field); color: var(--ink);
+  }
+  .btn-small {
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--field); font-size: 14px; cursor: pointer; color: var(--ink);
+  }
+  .btn-small:hover { background: #262626; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  thead th { text-align: left; font-size: 12px; color: var(--muted); padding: 10px 14px; background: var(--field); border-bottom: 1px solid var(--line); }
+  tbody td { padding: 10px 14px; font-size: 14px; border-bottom: 1px solid var(--line); color: var(--ink); }
+  tbody tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .tag.in { background: rgba(59,130,246,0.18); color: #60a5fa; }
+  .tag.out { background: rgba(224,72,60,0.22); color: #ff9d9d; }
+
+  .totals { margin-top: 22px; }
+  .totals h3 { font-size: 14px; color: var(--blue); margin-bottom: 8px; }
+  .total-row { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+
+  .emp-group { margin-bottom: 20px; }
+  .emp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .emp-name { font-size: 15px; margin: 0; color: var(--blue); }
+  .emp-hours { font-size: 13px; color: var(--muted); }
+
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 14px; }
+
+  .hidden { display: none !important; }
+
+  .lock {
+    max-width: 320px; width: 100%; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px;
+  }
+  .lock input { margin-bottom: 14px; }
+</style>
+</head>
+<body>
+
+  <div id="clockView">
+    <img class="logo-banner" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAaQAAAEUAQAAAABM/X/tAAAN/0lEQVR42u2bX4glV17HP6eq0lVJbupWLrJ2sJNbWRbNgysdQZjAOLcmChlB2Aj7IizY6II+DqLQyqTv6UlMRhAZECSgbPpJ9sEXYR9iiOZ0MrijRDKKDwsuu6ezjZldxDk96U3qduqenw/3X9176/7p+xBWsB6aW3++dX7nd37n9/v+fr9qJZz/OAkqJ2d6VVjAOkcVJWuhCvPZSZishYrWQgX2s5uXcmuNtZ5tXPzs5kW2FqpcC5XyZ2vNq1gD5T9DHa6Lujz6ta/yrurfPVRK6XOMFaxyPaE1+p0vWvypt6WTp1HdxRoZutkq1jW16x8w3mO2WHm+r8CM/0mWoaKTu+deL8H+tavXy2IJ1e65xwrYCP9j6oGXVxjri90bkxfkRUDJYtTf37w2ecH3HZc189dLdW6qPx6fuoFTiGZ0MznWgzf5xQkQxaYBaCxCfbT989Oe42eXayNKfi2feiC3NdOvnPbAJH8wgWBolmouqsx3Hw6+0JvaOPtLJCyObjWuqTmetN4DSIL78PRX9GuVhbGVDVTUonzJwcXEBG60gNsV5H2d165y2VMbf3S8E+RfrvPD1vzeZu28Ys708faZBFPyCYCx9drYePwdde/q5uludd565MWdrUWp9HLwevFeY3plCDJAF3M0/xcXXtblf3FHz9CiA+Dsaj3ql37z+Ye/91H4tK3K4kAZjUwTs7E2Xj/jZ4LOXT2eV3/Uk4W2YVOC7j+VepvloXqMSqNCiVWj55JyFW9THnfxaibIaly5wGMnkF85Nd+tKGKuZxyPJZrbfPQPPDIR3FMDcG0KOkZFBzQ0tpZL3Zw/FlwD5e6PzFADyXtQqGguKth5tJNPhZ+SoiCDYGoFxigVnqpcN4cymr4PdTjcrHGOf96hp3n/T58bztNX7k7tygrqOrfJz57515F/CvrTy1PIp5Qko+Pb3wDH0ev9M7ulQhOLCY04JSdSPVxlrK0PGhs3SQ8mXmouGRK4MHdej+3+dy9S0tYTcTnfX+wPkzR54luS/LYZ2FF/T3WCKS83hdoosvTftP65FyYDmK/JKSoopaPkUf3Qra9OmHy5LKbsZO5j+MuN/m4J6sJCDWrz7ndjJ1t/Be+Nd1G3Yiq1EXYjKv+ksfPEH36qf7WYjJgL85S/TTbCZ8Ku6T49jkTBcj7/pV2ax9nODw8mQ9+SCPsR2PyRH/7CmEwFxytkHNdRlx5948sHK0a9wTRyyYIfXLm+LJmdmuwTT/HPH1z+T4CnFiQGU2x58wdfE3a2q5wyWIaKXPyxLnd5Ip+2KFnE9Aqi3Iet53fOMy9VwlfDH73zyIwO/SJt7IHN/oX3qytrluqwrXn/sReqqyNZVJMFTqKyA+48YojHpptHdXFsErV5j+2xD0wBXtM1OeAU0+ve2Ly+TSV0Z5IA3F2ECrj1rcCoqgq/UWf4kyilP9YmqV5Lj1NKUYvtMAeVP6rHSk9q4/kUajvQ39Pdouohlu9KEn/hPme3KveVXo7a4NkikevjuKz8CvtL7W2Z4RbJ5yfs07tn57Ec/mawVnrVTOpCitJLqz7TqIaGK09Pli7cUlRAxrYbcgm/aq6nUx69N3mtRmCZOkz6kA9FxLVl7uFmPFCWiCrPqw1St0KRbgbVKNK5AWhRLSIAeO18qJWKKzMPqctO1zDCZa+2xRpjoT81c2PkfNSPhKVKnEVdZGcNCVcq7M0aGU0Ria2cxw55uL/j7TltQzeWCjjL4sK8C5SH7XPMqxRvL8n7glo0rwqq7HiRPCloQFOHK2mj14xMoA7NGwmnSypEFQkLLjeGJGPHtEy8moRlU389tMTvAb8rq6LE4mLXLzA3xTZH171aqI1heWZDRFxLxrIvso0w5BRNLF0gySoJX754vYq27A/EqkreWiDhvKMGtZJzcT9BVeLa49rMFbW8OXSS/PTUxE5WGCuJ1pFwY615qc9GhxLMKayO7URT0IKCXWh7CEUsrYJm2RRDR8qRL6laVK4ATUQEt4FezgHHkJYpGXBaa/NWlbSN8pSDZKHlQZW0i5Y42mJGD09YbzAIPwGgNTg/MTMTj6pOwVRFPwMFFzEEFCUlesTZ9Oa8ivQgk9zA8oShUAGHgzBjpRJtZrswPgKlHVA61CBKOPDk6DljJX1rzgvI/OCum0lMg8n+ARHliNsEFnDakoN2QLsWdQtgNx0GzGichdrJBGeiD6vxwSBzKsEmgzhlQc2t2+ChVLhssAomNaCL3KGBoqhHuT6lsXhw6CO9M5bq7ble1AwcQrugZYHwPsoT6qb+SgnK0q7zh0aVBAJ2UHLttRCP1wV/F4FYbK9mvfIgAGXYiUiz/iZWAYEBSwgZ2elBjc2HnlickpK2C3VLN3UoxDZWjtAoR2cYntyU9W6SBMPxc4jQUJIQZRN0bsoD7BBFJ9mQGuVAkhJEkE50i2r8xl3HRO4ghCP7nIcqE1NUciFN4ke2eXEuqkiHa9v3FumQA0UVIhTUNwvGxX2igaQ3MKO5zaBcNs5pUi9kla5ZWWuHHrA5wZDnJeLJg8GqHGKLdN5YBi4BiXZJGfFTlRxRH9/K5vhDQbhOSzdpFqEHJZ6m2GbfojuztmEpYZCG6yZFhBrKYgGXomqs1whYAvRb3OdJSjxmwHbMaUHRqESyKSpRxKJbUtL2yisphzL1N2BnkqVohvHCxWKa4uiUeGqIVwXV13NbRMQ2xcaikYIOnbKe+rgIkCwsOcoOMws2Je0qQsBoKRfEygdhCS3PUQ4mozGi3mYRg9V9N+Kh4xHxQEscbdPyzJ3XaMolqlR9Z9URR9s2ZT6qiMesk1BECkKRgraLRc9l5sUomsWOCIgHWpjfGwnAjfOtpulWPF3k67t6gExIocfsABH2wrnz2h+feq4xeBAloonnoirvK5RoBuYSi1ia81C+8j4Xjs2hJVLQXiXXuxsR2pFDJVbzrGNiLN3qbwBgSZ5SQfn+dtLAxMZajBpmJHZhptffKWMLuBcOFbGcVY4LQQeNVcmojO3a05aVDhdU6uFnmNV5rz6YmtZKqHwY5bLGOVDZgNB22Zb09vsRvSxO9z93+Fim6D6mDp999vbRbyQ3elnSyypEsjfsfxkKT4/Te6SQFZnOi767tqbskHF6r0IJ+wytl/dLyqnG3OR5rT4gQplLG6dXeFffvwQ3R4WIACKOAW6zCQgJJyWwE3yBwD74YqgwRHkjAE4q8Sukl8NJPl3SCACf9qNXxtG4O9C/ZTjMDlNi8G8lOjKD2qEG5MlCPh+gOfhg+oXbcJTDRSg9H4P1u+5Nvu+tdqm7++aTHtgX7K6tovrtt/4OjEYN1acAkiLL/31gP9nkWP3nnwSi5zCQBTfT5wluZDol2Ay5i2ZHa25mExzgMhBboPQBZV6hNp9oUBHw6W41WgSDlLRZACg7bsriPBS5DAKzvusxU5xNXKVY0LzNGXh76rMz49mF0t4zxeknTVcbl0/sty8gRXODl5yNlO7YBu++FL9rtgNuK641K7GSareYmCj9BNDJj/f9j9NTk0d+23z+8GlobK+eZQ8JU3quLJvZ9vlPWs3h/ziqWAvl1kIdcBSwnwLsp+wnojKAwwRUhsp6Ks9nrTcWzR6hiHhCjyr68RIlJXFJbBhGD1f9zkFe1W/igTP82ZYUlEAPoYzLkrKSMAfVXHRz5zt7AhR7UvyOvtbZA8rY6OKiLryvzStdXLYdokXkRHBicjkUkaJp27azfyS8K26WOTgoUKDBobXFIEBBihUdoKPx5zBBtWtyd7J/ptXwjg4sJBzMovJKx8UC5Gac3b7sD0i5MYOSBkHiJAeQnCQz3Hln9Mrd1oGmF81WbrdiEbPdovOSuDYdUZZQYimatolp2zbi4hlt3Nspkfzqb9F7UV9tQzcAel12CyC/s/nLE9MeUahSSUnHcZELHUfbKkPo2NrpF9rEsjfiVmPPFhIQ6rdV+Eb6gFuhEcnwcLwJsHWsVahvbM6M9WoZi9gWbQsd2iJ6BywIaZM9JXTGJGZcg2Urfq/pLij5sMArcW2D4yuFEuuaWlQZyjhpGWmjx3H314vEX2AzDv0FnM1Uk+04oEUKUm5RhjP7qwSybU63MZTlNrkhwEApfe9Z7KCjGVRcQn4VvomB4ptcGUY4X7gMcC9IUVP7Cg2agsc7gHu8M2pylAnkKJ7Zq619XeqTlBvDv8b32VxqczpYXq4UwSvfYhEdjFe/qXVbXwEijM7+sUoIJ3ZlEXrIoJ8xFmAHPkSJIzbg6vh84RW8WyggdCoiTIkAxQYNktipWs/mBBs34leARvOVUG9d6NczzCYh1zabf76wuzSf7Zadc9XnB5VpvU50iN5aBxXcOU+lffbZk/PErw/XGmsdvvH/zAF6KlkD9TLdhPN2YboJ0HTnXK+iI4aTZLq1vUxCzbahq4plHdVJ2tqEt8toyRfjqjM7uAlliQ711FcUn1t1vQ6fCSTiMD968VnFBUCCw2UoE2RX5QpkFhP1fbQK1DJUCWCjYSGoL/ZKHyhsuQHpeLKvcB8tQUXogT+v2EN+Z9lY3xl8JXpcwbX0Ms0Dus+AA/opsLOzPepoxpptwaeK53qqKGsylNqxbjjVFy1h0LcY9AWW6DDIkvShiN+PuP6l4d1V+rAaQJd4mtEcyh7UnPuE4vFKL+mDYglqaDtuQwP0WyGqfLBMQo8uU17Hk/E/fZdxe2/J/iIC7mVdDR5OGwZczT+TTaN0x0Ib7zqkJV/Pge/TUQu77fLq5KnvrFIJvDfl+7xex/eGK3ns8tY6fr6XrYPazFdD/S+A2FeX+ujFPwAAAABJRU5ErkJggg==" alt="M&E Hydrovac and Oilfield Services logo">
+    <div class="brand">Time Clock</div>
+    <button class="admin-link" id="langToggleBtn" style="margin-top:0;margin-bottom:12px;">Español</button>
+    <div class="card">
+      <label for="employeeSelect" id="employeeLabelText">Employee</label>
+      <select id="employeeSelect"></select>
+
+      <div class="status-row">
+        <span>Current status</span>
+        <strong id="statusText">—</strong>
+      </div>
+
+      <button id="punchBtn" class="punch in" disabled>Loading…</button>
+      <button id="breakBtn" class="btn-small hidden" style="width:100%;margin-top:10px;">Start Break</button>
+      <div class="last-punch" id="lastPunchText"></div>
+      <div class="last-punch" id="locationText"></div>
+      <div class="last-punch" id="offlineBanner" style="color:#ffb347;"></div>
+    </div>
+    <button class="admin-link" id="myHoursLink">My hours</button>
+    <button class="admin-link" id="myUploadsLink">My uploads</button>
+    <button class="admin-link" id="openAdminLink">Admin log</button>
+  </div>
+
+  <div id="pinView" class="hidden">
+    <div class="lock">
+      <label for="employeePinInput" id="pinPromptLabel">Enter your 4-digit code</label>
+      <input type="password" id="employeePinInput" inputmode="numeric" maxlength="4" placeholder="••••">
+      <button class="btn-small" id="pinConfirmBtn" style="width:100%">Confirm</button>
+      <button class="admin-link" id="pinCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="reportView" class="hidden">
+    <div class="lock">
+      <label for="reportDescription" id="reportLabelText">What did you do today?</label>
+      <textarea id="reportDescription" rows="4" placeholder="Describe today's work…"></textarea>
+      <label for="reportPhotoInput" id="reportPhotoLabelText">Field ticket photo (optional)</label>
+      <input type="file" id="reportPhotoInput" accept="image/*">
+      <div id="reportPhotoPreviewWrap"></div>
+      <button class="btn-small" id="reportSubmitBtn" style="width:100%; margin-top:6px;">Submit &amp; clock out</button>
+      <button class="admin-link" id="reportCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="selfieView" class="hidden">
+    <div class="lock">
+      <label for="selfieInput" id="selfieLabelText">Take a selfie to clock in</label>
+      <input type="file" id="selfieInput" accept="image/*" capture="user">
+      <div id="selfiePreviewWrap"></div>
+      <button class="btn-small" id="selfieSubmitBtn" style="width:100%; margin-top:6px;">Confirm &amp; clock in</button>
+      <button class="admin-link" id="selfieCancelBtn" style="display:block;margin-top:10px;">Cancel</button>
+    </div>
+  </div>
+
+  <div id="myUploadsView" class="hidden">
+    <div class="admin-header">
+      <h2 id="myUploadsTitle">My uploads</h2>
+      <div class="admin-controls">
+        <button class="btn-small" id="myUploadsBackBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="myUploadsWrap"></div>
+  </div>
+
+  <div id="myHoursView" class="hidden">
+    <div class="admin-header">
+      <h2 id="myHoursTitle">My hours</h2>
+      <div class="admin-controls">
+        <input type="date" id="myHoursDate">
+        <button class="btn-small" id="myHoursBackBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="myHoursWrap"></div>
+    <div class="admin-controls" style="margin-top:14px;">
+      <button class="btn-small" id="signOffWeekBtn">Sign off this week</button>
+    </div>
+    <div id="signOffStatus" style="font-size:13px;color:var(--muted);margin-top:8px;"></div>
+  </div>
+
+  <div id="lockView" class="hidden">
+    <div class="lock">
+      <label for="passcodeInput">Admin passcode</label>
+      <input type="text" id="passcodeInput" inputmode="numeric" placeholder="Enter passcode">
+      <button class="btn-small" id="unlockBtn" style="width:100%">Unlock</button>
+      <button class="admin-link" id="backToClockLink" style="display:block;margin-top:10px;">Back to clock</button>
+    </div>
+  </div>
+
+  <div id="admin" class="hidden">
+    <div class="admin-header">
+      <h2>⚠️ Face mismatch alerts</h2>
+      <button class="btn-small" id="refreshAlertsBtn">Refresh</button>
+    </div>
+    <div id="faceAlertsWrap"></div>
+
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Faces on file</h2>
+      <button class="btn-small" id="refreshProfilesBtn">Refresh</button>
+    </div>
+    <div id="faceProfilesWrap"></div>
+
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Currently clocked in</h2>
+      <button class="btn-small" id="refreshCurrentBtn">Refresh</button>
+    </div>
+    <div id="currentlyInWrap"></div>
+
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Time log</h2>
+      <div class="admin-controls">
+        <input type="date" id="dateFilter">
+        <button class="btn-small" id="exportBtn">Export CSV</button>
+        <button class="btn-small" id="backToClockBtn">Back to clock</button>
+      </div>
+    </div>
+    <div id="logTableWrap"></div>
+    <div class="totals" id="totalsWrap"></div>
+    <div class="admin-controls" style="margin-top:10px;">
+      <button class="btn-small" id="emailSummaryBtn">Email today's summary</button>
+    </div>
+
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Pay period totals</h2>
+      <div class="admin-controls">
+        <input type="date" id="periodStart">
+        <span style="color:var(--muted);">to</span>
+        <input type="date" id="periodEnd">
+        <button class="btn-small" id="periodShowBtn">Show totals</button>
+      </div>
+    </div>
+    <div id="periodTotalsWrap"></div>
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Field ticket photos</h2>
+    </div>
+    <div id="adminUploadsWrap"></div>
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Replay path</h2>
+      <div class="admin-controls">
+        <select id="replayEmployeeSelect"></select>
+        <button class="btn-small" id="replayShowBtn">Show path</button>
+      </div>
+    </div>
+    <div id="replayMapWrap"></div>
+
+    <div class="admin-header" style="margin-top:28px;">
+      <h2>Maintenance</h2>
+    </div>
+    <div class="admin-controls">
+      <button class="btn-small" id="cleanupTracksBtn">Delete GPS tracks older than 90 days</button>
+      <button class="btn-small" id="purgePhotosBtn">Delete photos older than 90 days</button>
+      <button class="btn-small" id="deleteAllPhotosBtn" style="border-color:var(--red);color:var(--red);">Delete ALL photos now</button>
+      <button class="btn-small" id="fullBackupBtn">Download full backup (JSON)</button>
+    </div>
+    <div id="maintenanceStatus" style="font-size:13px;color:var(--muted);margin-top:8px;"></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">To stay on Firebase's free plan, tap both delete buttons about once a month. Hours and punch times are never deleted — only old GPS points and photos. Download a full backup first if you want to keep them.</p>
+  </div>
+
+<script>
+/* =========================================================================
+   CONFIG — edit these three things, then you're done.
+   ========================================================================= */
+
+// 1. Paste your Firebase project config here (Firebase console → Project
+//    settings → General → Your apps → SDK setup and configuration).
+const firebaseConfig = {
+  apiKey: "AIzaSyA2OrNhjacQnFXvYhdg8w7UzRmzZmbJ2Co",
+  authDomain: "me-clock-in-21c19.firebaseapp.com",
+  projectId: "me-clock-in-21c19",
+  storageBucket: "me-clock-in-21c19.firebasestorage.app",
+  messagingSenderId: "281067870585",
+  appId: "1:281067870585:web:df22d315d369eba1a7b7a8"
+};
+
+// 2. List your employees exactly as you want them to appear.
+const EMPLOYEES = ["James Hernandez", "Manuel Villa", "Lupe Peña", "Manuel Ybarra", "Adrian Corrales"];
+
+// 3. Pick a passcode for the admin log view. Anyone with this passcode
+//    (and the link) can see all punches — it's a convenience lock, not
+//    real security. Don't reuse a real password here.
+const ADMIN_PASSCODE = "8420";
+
+// 4. Job site locations for the radius check — add as many as you need.
+//    Each punch checks against whichever site is closest.
+const JOB_SITES = [
+  { name: "Midland yard", lat: 31.9544113, lng: -101.8365136 }
+];
+const RADIUS_FEET = 300;
+
+// While this is false, anyone can clock in or out from anywhere — their exact
+// coordinates are still recorded on every clock in and out. Change it to true
+// later to only allow clocking within RADIUS_FEET of a job site above.
+const ENFORCE_JOB_SITE_RADIUS = false;
+
+// How different two faces are allowed to be before it's flagged as a
+// possible mismatch. Lower = stricter. 0.6 is the standard value for this
+// face model.
+const FACE_MATCH_THRESHOLD = 0.6;
+
+// 5. A 4-digit code for each employee, required before every clock in/out.
+//    Add a new line here whenever you add a name to EMPLOYEES above.
+//    Like ADMIN_PASSCODE, this is a convenience check, not strong security —
+//    anyone who learns someone's code could use it.
+const EMPLOYEE_PINS = {
+  "James Hernandez": "1111",
+  "Manuel Villa": "2222",
+  "Lupe Peña": "3333",
+  "Manuel Ybarra": "4444",
+  "Adrian Corrales": "5555"
+};
+
+// 6. Spanish/English text for the screens employees use day to day.
+//    (The admin panel stays English-only — that's for you.)
+const STRINGS = {
+  en: {
+    employeeLabel: "Employee",
+    myHours: "My hours", myUploads: "My uploads", backToClock: "Back to clock",
+    startBreak: "Start Break", endBreak: "End Break", notClockedIn: "Not clocked in", clockedIn: "Clocked in",
+    clockedOut: "Clocked out", couldntConnect: "Couldn't connect", loading: "Loading…", clockOut: "Clock Out",
+    clockIn: "Clock In", tapToRetry: "Tap to retry", enableLocation: "Enable location & retry",
+    checkLocationAgain: "Check location again", checkingLocation: "Checking location…",
+    offlineMsg: "You're offline — punches will save and sync automatically once you have signal.",
+    pinPrompt: "Enter {name}'s 4-digit code", confirm: "Confirm", cancel: "Cancel",
+    reportLabel: "What did you do today?", reportPlaceholder: "Describe today's work…",
+    reportPhotoLabel: "Field ticket photo (optional)", submitClockOut: "Submit & clock out",
+    selfieLabel: "Take a selfie to clock in", confirmClockIn: "Confirm & clock in",
+    selfieLabelOut: "Take a selfie to clock out", confirmClockOut: "Confirm & clock out",
+    signOffWeek: "Sign off this week",
+    stillOnBreak: "Still on break", endBreakFirst: "End the break before clocking out.",
+    langToggle: "Español"
+  },
+  es: {
+    employeeLabel: "Empleado",
+    myHours: "Mis horas", myUploads: "Mis fotos", backToClock: "Volver al reloj",
+    startBreak: "Iniciar descanso", endBreak: "Terminar descanso", notClockedIn: "No registrado",
+    clockedIn: "Registrado (entrada)", clockedOut: "Registrado (salida)", couldntConnect: "No se pudo conectar",
+    loading: "Cargando…", clockOut: "Marcar salida", clockIn: "Marcar entrada", tapToRetry: "Toca para reintentar",
+    enableLocation: "Activa la ubicación y reintenta", checkLocationAgain: "Verificar ubicación de nuevo",
+    checkingLocation: "Verificando ubicación…",
+    offlineMsg: "Estás sin conexión — se guardará y sincronizará cuando tengas señal.",
+    pinPrompt: "Ingresa el código de 4 dígitos de {name}", confirm: "Confirmar", cancel: "Cancelar",
+    reportLabel: "¿Qué hiciste hoy?", reportPlaceholder: "Describe el trabajo de hoy…",
+    reportPhotoLabel: "Foto del ticket de campo (opcional)", submitClockOut: "Enviar y marcar salida",
+    selfieLabel: "Tómate una selfie para marcar entrada", confirmClockIn: "Confirmar y marcar entrada",
+    selfieLabelOut: "Tómate una selfie para marcar salida", confirmClockOut: "Confirmar y marcar salida",
+    signOffWeek: "Firmar esta semana",
+    stillOnBreak: "Todavía en descanso", endBreakFirst: "Termina el descanso antes de marcar salida.",
+    langToggle: "English"
+  }
+};
+
+/* =========================================================================
+   App logic — no need to edit below this line.
+   ========================================================================= */
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch(err => console.warn("Offline persistence unavailable:", err.code));
+const punches = db.collection("punches");
+const statusCol = db.collection("status");
+const uploadsCol = db.collection("uploads");
+const tracksCol = db.collection("tracks");
+const faceProfilesCol = db.collection("faceProfiles");
+const faceAlertsCol = db.collection("faceAlerts");
+const signoffsCol = db.collection("signoffs");
+
+const employeeSelect = document.getElementById("employeeSelect");
+const langToggleBtn = document.getElementById("langToggleBtn");
+const statusText = document.getElementById("statusText");
+const punchBtn = document.getElementById("punchBtn");
+const breakBtn = document.getElementById("breakBtn");
+const lastPunchText = document.getElementById("lastPunchText");
+const pinView = document.getElementById("pinView");
+const pinPromptLabel = document.getElementById("pinPromptLabel");
+const employeePinInput = document.getElementById("employeePinInput");
+const pinConfirmBtn = document.getElementById("pinConfirmBtn");
+const pinCancelBtn = document.getElementById("pinCancelBtn");
+const reportView = document.getElementById("reportView");
+const reportDescription = document.getElementById("reportDescription");
+const reportPhotoInput = document.getElementById("reportPhotoInput");
+const reportPhotoPreviewWrap = document.getElementById("reportPhotoPreviewWrap");
+const reportSubmitBtn = document.getElementById("reportSubmitBtn");
+const reportCancelBtn = document.getElementById("reportCancelBtn");
+const myHoursLink = document.getElementById("myHoursLink");
+const myHoursView = document.getElementById("myHoursView");
+const myHoursTitle = document.getElementById("myHoursTitle");
+const myHoursDate = document.getElementById("myHoursDate");
+const myHoursWrap = document.getElementById("myHoursWrap");
+const myHoursBackBtn = document.getElementById("myHoursBackBtn");
+const signOffWeekBtn = document.getElementById("signOffWeekBtn");
+const signOffStatus = document.getElementById("signOffStatus");
+const myUploadsLink = document.getElementById("myUploadsLink");
+const myUploadsView = document.getElementById("myUploadsView");
+const myUploadsTitle = document.getElementById("myUploadsTitle");
+const myUploadsWrap = document.getElementById("myUploadsWrap");
+const myUploadsBackBtn = document.getElementById("myUploadsBackBtn");
+const selfieView = document.getElementById("selfieView");
+const selfieInput = document.getElementById("selfieInput");
+const selfiePreviewWrap = document.getElementById("selfiePreviewWrap");
+const selfieSubmitBtn = document.getElementById("selfieSubmitBtn");
+const selfieCancelBtn = document.getElementById("selfieCancelBtn");
+const adminUploadsWrap = document.getElementById("adminUploadsWrap");
+const currentlyInWrap = document.getElementById("currentlyInWrap");
+const faceAlertsWrap = document.getElementById("faceAlertsWrap");
+const faceProfilesWrap = document.getElementById("faceProfilesWrap");
+const refreshProfilesBtn = document.getElementById("refreshProfilesBtn");
+const refreshAlertsBtn = document.getElementById("refreshAlertsBtn");
+const refreshCurrentBtn = document.getElementById("refreshCurrentBtn");
+const emailSummaryBtn = document.getElementById("emailSummaryBtn");
+const periodStart = document.getElementById("periodStart");
+const periodEnd = document.getElementById("periodEnd");
+const periodShowBtn = document.getElementById("periodShowBtn");
+const periodTotalsWrap = document.getElementById("periodTotalsWrap");
+const replayEmployeeSelect = document.getElementById("replayEmployeeSelect");
+const replayShowBtn = document.getElementById("replayShowBtn");
+const replayMapWrap = document.getElementById("replayMapWrap");
+const cleanupTracksBtn = document.getElementById("cleanupTracksBtn");
+const purgePhotosBtn = document.getElementById("purgePhotosBtn");
+const deleteAllPhotosBtn = document.getElementById("deleteAllPhotosBtn");
+const fullBackupBtn = document.getElementById("fullBackupBtn");
+const maintenanceStatus = document.getElementById("maintenanceStatus");
+
+[...EMPLOYEES].sort((a, b) => a.localeCompare(b)).forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name;
+  opt.textContent = name;
+  employeeSelect.appendChild(opt);
+});
+
+const savedName = localStorage.getItem("tc_employee");
+if (savedName && EMPLOYEES.includes(savedName)) employeeSelect.value = savedName;
+
+let currentStatus = null; // 'in' | 'out' | null
+let onBreak = false;
+let lastPunchDeviceId = null;
+let hasError = false;
+let locState = "checking"; // 'checking' | 'ok' | 'out' | 'denied' | 'error'
+let locDistanceFt = null;
+let locSiteName = null;
+const locationText = document.getElementById("locationText");
+
+function getDeviceId() {
+  let id = localStorage.getItem("tc_device_id");
+  if (!id) {
+    id = window.crypto && crypto.randomUUID
+      ? crypto.randomUUID()
+      : "dev-" + Math.random().toString(36).slice(2) + Date.now();
+    localStorage.setItem("tc_device_id", id);
+  }
+  return id;
+}
+const deviceId = getDeviceId();
+
+let currentLang = localStorage.getItem("tc_lang") || "en";
+function t(key, vars) {
+  let s = (STRINGS[currentLang] && STRINGS[currentLang][key]) || STRINGS.en[key] || key;
+  if (vars) for (const k in vars) s = s.replace("{" + k + "}", vars[k]);
+  return s;
+}
+function applyLanguage() {
+  langToggleBtn.textContent = t("langToggle");
+  document.getElementById("employeeLabelText").textContent = t("employeeLabel");
+  myHoursLink.textContent = t("myHours");
+  myUploadsLink.textContent = t("myUploads");
+  myHoursBackBtn.textContent = t("backToClock");
+  myUploadsBackBtn.textContent = t("backToClock");
+  signOffWeekBtn.textContent = t("signOffWeek");
+  pinConfirmBtn.textContent = t("confirm");
+  pinCancelBtn.textContent = t("cancel");
+  document.getElementById("reportLabelText").textContent = t("reportLabel");
+  reportDescription.placeholder = t("reportPlaceholder");
+  document.getElementById("reportPhotoLabelText").textContent = t("reportPhotoLabel");
+  reportSubmitBtn.innerHTML = t("submitClockOut").replace("&", "&amp;");
+  reportCancelBtn.textContent = t("cancel");
+  document.getElementById("selfieLabelText").textContent = t("selfieLabel");
+  selfieSubmitBtn.innerHTML = t("confirmClockIn").replace("&", "&amp;");
+  selfieCancelBtn.textContent = t("cancel");
+  updateOfflineBanner();
+  renderBreakButton();
+}
+langToggleBtn.addEventListener("click", () => {
+  currentLang = currentLang === "en" ? "es" : "en";
+  localStorage.setItem("tc_lang", currentLang);
+  applyLanguage();
+});
+
+const offlineBanner = document.getElementById("offlineBanner");
+function updateOfflineBanner() {
+  offlineBanner.textContent = navigator.onLine ? "" : t("offlineMsg");
+}
+window.addEventListener("online", updateOfflineBanner);
+window.addEventListener("offline", updateOfflineBanner);
+updateOfflineBanner();
+
+let trackWatchId = null;
+let lastTrackWriteAt = 0;
+const TRACK_MIN_INTERVAL_MS = 300000; // one location point per 5 minutes at most (keeps you under the free daily write limit)
+
+function startTracking(name) {
+  stopTracking();
+  if (!navigator.geolocation) return;
+  lastTrackWriteAt = 0;
+  trackWatchId = navigator.geolocation.watchPosition(
+    pos => {
+      const now = Date.now();
+      if (now - lastTrackWriteAt < TRACK_MIN_INTERVAL_MS) return;
+      lastTrackWriteAt = now;
+      tracksCol.add({
+        name,
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        deviceId
+      }).catch(err => console.error(err));
+    },
+    err => console.error(err),
+    { enableHighAccuracy: true, maximumAge: 30000, timeout: 20000 }
+  );
+}
+function stopTracking() {
+  if (trackWatchId !== null) {
+    navigator.geolocation.clearWatch(trackWatchId);
+    trackWatchId = null;
+  }
+}
+
+function requestPin(name) {
+  const correctPin = EMPLOYEE_PINS[name] || null;
+
+  return new Promise(resolve => {
+    pinPromptLabel.textContent = t("pinPrompt", { name });
+    employeePinInput.value = "";
+    employeePinInput.placeholder = "••••";
+    clockView.classList.add("hidden");
+    pinView.classList.remove("hidden");
+    employeePinInput.focus();
+
+    function cleanup() {
+      pinConfirmBtn.removeEventListener("click", onConfirm);
+      pinCancelBtn.removeEventListener("click", onCancel);
+      pinView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    function onConfirm() {
+      if (!correctPin) {
+        employeePinInput.placeholder = "No code set up for this employee";
+        return;
+      }
+      if (employeePinInput.value.trim() === correctPin) {
+        cleanup();
+        resolve(true);
+      } else {
+        employeePinInput.value = "";
+        employeePinInput.placeholder = "Wrong code — try again";
+      }
+    }
+    function onCancel() {
+      cleanup();
+      resolve(false);
+    }
+    pinConfirmBtn.addEventListener("click", onConfirm);
+    pinCancelBtn.addEventListener("click", onCancel);
+  });
+}
+
+function readAndCompressImage(file, maxW = 1000, quality = 0.6) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function requestReport(name) {
+  return new Promise(resolve => {
+    reportDescription.value = "";
+    reportPhotoInput.value = "";
+    reportPhotoPreviewWrap.innerHTML = "";
+    let photoDataUrl = null;
+    let errorEl = null;
+
+    clockView.classList.add("hidden");
+    reportView.classList.remove("hidden");
+    reportDescription.focus();
+
+    function showError(msg) {
+      if (!errorEl) {
+        errorEl = document.createElement("div");
+        errorEl.className = "field-error";
+        reportDescription.insertAdjacentElement("afterend", errorEl);
+      }
+      errorEl.textContent = msg;
+    }
+
+    async function onPhotoChange() {
+      const file = reportPhotoInput.files[0];
+      if (!file) { photoDataUrl = null; reportPhotoPreviewWrap.innerHTML = ""; return; }
+      reportPhotoPreviewWrap.innerHTML = "<p style=\"font-size:13px;color:var(--ink);\">Processing photo…</p>";
+      try {
+        const dataUrl = await readAndCompressImage(file, 900, 0.55);
+        if (dataUrl.length > 900000) {
+          photoDataUrl = null;
+          reportPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Photo's too large — try taking it from farther away, or skip the photo.</p>";
+        } else {
+          photoDataUrl = dataUrl;
+          reportPhotoPreviewWrap.innerHTML = `<img src="${dataUrl}" style="max-width:100%;border-radius:8px;margin-top:8px;">`;
+        }
+      } catch (err) {
+        console.error(err);
+        photoDataUrl = null;
+        reportPhotoPreviewWrap.innerHTML = "<p class=\"field-error\">Couldn't read that photo.</p>";
+      }
+    }
+
+    function cleanup() {
+      reportSubmitBtn.removeEventListener("click", onSubmit);
+      reportCancelBtn.removeEventListener("click", onCancel);
+      reportPhotoInput.removeEventListener("change", onPhotoChange);
+      if (errorEl) errorEl.remove();
+      reportView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    function onSubmit() {
+      const desc = reportDescription.value.trim();
+      if (!desc) { showError("Enter a description of today's work first."); return; }
+      const result = { description: desc, photo: photoDataUrl };
+      cleanup();
+      resolve(result);
+    }
+    function onCancel() { cleanup(); resolve(null); }
+
+    reportPhotoInput.addEventListener("change", onPhotoChange);
+    reportSubmitBtn.addEventListener("click", onSubmit);
+    reportCancelBtn.addEventListener("click", onCancel);
+  });
+}
+
+function requestSelfie(name, mode) {
+  return new Promise(resolve => {
+    selfieInput.value = "";
+    selfiePreviewWrap.innerHTML = "";
+    let photoDataUrl = null;
+    let errorEl = null;
+
+    document.getElementById("selfieLabelText").textContent = mode === "out" ? t("selfieLabelOut") : t("selfieLabel");
+    selfieSubmitBtn.innerHTML = (mode === "out" ? t("confirmClockOut") : t("confirmClockIn")).replace("&", "&amp;");
+
+    clockView.classList.add("hidden");
+    selfieView.classList.remove("hidden");
+
+    function showError(msg) {
+      if (!errorEl) {
+        errorEl = document.createElement("div");
+        errorEl.className = "field-error";
+        selfiePreviewWrap.insertAdjacentElement("afterend", errorEl);
+      }
+      errorEl.textContent = msg;
+    }
+
+    async function onPhotoChange() {
+      if (errorEl) { errorEl.remove(); errorEl = null; }
+      const file = selfieInput.files[0];
+      if (!file) { photoDataUrl = null; selfiePreviewWrap.innerHTML = ""; return; }
+      selfiePreviewWrap.innerHTML = "<p style=\"font-size:13px;color:var(--ink);\">Processing photo…</p>";
+      try {
+        const dataUrl = await readAndCompressImage(file, 480, 0.5);
+        if (dataUrl.length > 900000) {
+          photoDataUrl = null;
+          selfiePreviewWrap.innerHTML = "<p class=\"field-error\">Photo's too large — try again.</p>";
+        } else {
+          photoDataUrl = dataUrl;
+          selfiePreviewWrap.innerHTML = `<img src="${dataUrl}" style="max-width:100%;border-radius:8px;margin-top:8px;">`;
+        }
+      } catch (err) {
+        console.error(err);
+        photoDataUrl = null;
+        selfiePreviewWrap.innerHTML = "<p class=\"field-error\">Couldn't read that photo.</p>";
+      }
+    }
+
+    function cleanup() {
+      selfieSubmitBtn.removeEventListener("click", onSubmit);
+      selfieCancelBtn.removeEventListener("click", onCancel);
+      selfieInput.removeEventListener("change", onPhotoChange);
+      if (errorEl) errorEl.remove();
+      selfieView.classList.add("hidden");
+      clockView.classList.remove("hidden");
+    }
+    async function onSubmit() {
+      if (!photoDataUrl) { showError("Take a selfie first."); return; }
+      const originalLabel = selfieSubmitBtn.innerHTML;
+      selfieSubmitBtn.disabled = true;
+      selfieSubmitBtn.textContent = "Checking photo…";
+
+      let descriptor;
+      try {
+        descriptor = window.getFaceDescriptor ? await window.getFaceDescriptor(photoDataUrl) : undefined;
+      } catch (e) {
+        descriptor = undefined;
+      }
+
+      if (descriptor === null) {
+        selfieSubmitBtn.disabled = false;
+        selfieSubmitBtn.innerHTML = originalLabel;
+        showError("No face detected — retake the photo showing your face clearly.");
+        return;
+      }
+
+      if (descriptor) {
+        try {
+          const profileRef = faceProfilesCol.doc(name);
+          const profileDoc = await profileRef.get();
+          if (!profileDoc.exists) {
+            // First clock-in ever for this person: this face becomes the one on file.
+            await profileRef.set({
+              descriptor,
+              photo: photoDataUrl,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          } else {
+            const stored = profileDoc.data();
+            const dist = window.faceDistance(descriptor, stored.descriptor);
+            if (dist > FACE_MATCH_THRESHOLD) {
+              // Different face. Punch still goes through (so a bad photo in
+              // poor light never locks out a real employee), but admin gets
+              // an alert. Nothing is shown to the person clocking in.
+              faceAlertsCol.add({
+                name,
+                action: mode,
+                distance: dist,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                deviceId,
+                attemptPhoto: photoDataUrl,
+                referencePhoto: stored.photo || null
+              }).catch(err => console.error(err));
+            }
+          }
+        } catch (err) {
+          console.error(err); // never block a punch over a lookup hiccup
+        }
+      }
+
+      selfieSubmitBtn.disabled = false;
+      selfieSubmitBtn.innerHTML = originalLabel;
+      const result = photoDataUrl;
+      cleanup();
+      resolve(result);
+    }
+    function onCancel() { cleanup(); resolve(null); }
+
+    selfieInput.addEventListener("change", onPhotoChange);
+    selfieSubmitBtn.addEventListener("click", onSubmit);
+    selfieCancelBtn.addEventListener("click", onCancel);
+  });
+}
+
+// Clear out any old phone Face ID setup left over from earlier versions.
+try { localStorage.removeItem("tc_webauthn_cred_id"); } catch (e) {}
+
+function coordLink(r) {
+  if (r.lat == null || r.lng == null) return "—";
+  const acc = r.accuracy ? ` <span style="color:var(--muted);">±${r.accuracy} m</span>` : "";
+  return `<a href="https://maps.google.com/?q=${r.lat},${r.lng}" target="_blank" rel="noopener">${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}</a>${acc}`;
+}
+
+function fmtTime(ts) {
+  return ts.toDate().toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" });
+}
+
+function distanceFeet(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = d => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c * 3.28084;
+}
+function nearestJobSite(lat, lng) {
+  let best = null;
+  JOB_SITES.forEach(site => {
+    const d = distanceFeet(lat, lng, site.lat, site.lng);
+    if (!best || d < best.dist) best = { site, dist: d };
+  });
+  return best;
+}
+
+function renderLocationText() {
+  if (locState === "checking") { locationText.textContent = "Checking your location…"; return; }
+  if (locState === "denied") { locationText.textContent = "Location access is off — turn it on in your phone settings to clock in/out."; return; }
+  if (locState === "error") { locationText.textContent = "Couldn't get your location. Tap the button to try again."; return; }
+  if (locState === "out") { locationText.textContent = `You're ${locDistanceFt} ft from ${locSiteName} — must be within ${RADIUS_FEET} ft.`; return; }
+  locationText.textContent = ENFORCE_JOB_SITE_RADIUS
+    ? `At ${locSiteName} (${locDistanceFt} ft away)`
+    : "Location found — it will be recorded when you clock in or out.";
+}
+
+function checkLocation() {
+  locState = "checking";
+  renderLocationText();
+  renderButton();
+  if (!navigator.geolocation) {
+    locState = "error";
+    renderLocationText();
+    renderButton();
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const nearest = nearestJobSite(pos.coords.latitude, pos.coords.longitude);
+      locDistanceFt = Math.round(nearest.dist);
+      locSiteName = nearest.site.name;
+      locState = (!ENFORCE_JOB_SITE_RADIUS || nearest.dist <= RADIUS_FEET) ? "ok" : "out";
+      renderLocationText();
+      renderButton();
+    },
+    err => {
+      console.error(err);
+      locState = err.code === 1 ? "denied" : "error";
+      renderLocationText();
+      renderButton();
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+}
+
+async function refreshStatus() {
+  hasError = false;
+  punchBtn.disabled = true;
+  punchBtn.textContent = t("loading");
+  const name = employeeSelect.value;
+  localStorage.setItem("tc_employee", name);
+
+  try {
+    const doc = await statusCol.doc(name).get();
+    let statusData = doc.exists ? doc.data() : null;
+
+    if (!statusData) {
+      // No fast-lookup record yet for this person (e.g. their first check
+      // since this feature was added) — fall back to scanning their full
+      // history once, then cache the result so future checks are instant.
+      const snap = await punches.where("name", "==", name).get();
+      let last = null;
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.timestamp && (!last || data.timestamp.toMillis() > last.timestamp.toMillis())) last = data;
+      });
+      if (last) {
+        statusData = last;
+        statusCol.doc(name).set(statusData).catch(() => {});
+      }
+    }
+
+    if (!statusData) {
+      currentStatus = "out";
+      lastPunchDeviceId = null;
+      onBreak = false;
+      statusText.textContent = t("notClockedIn");
+      lastPunchText.textContent = "";
+    } else {
+      currentStatus = statusData.action;
+      lastPunchDeviceId = statusData.deviceId || null;
+      onBreak = currentStatus === "in" ? !!statusData.onBreak : false;
+      statusText.textContent = statusData.action === "in" ? t("clockedIn") : t("clockedOut");
+      lastPunchText.textContent = statusData.timestamp
+        ? "Last: " + statusData.action.toUpperCase() + " at " + fmtTime(statusData.timestamp)
+        : "";
+    }
+    if (currentStatus === "in" && lastPunchDeviceId === deviceId) {
+      startTracking(name);
+    } else {
+      stopTracking();
+    }
+    renderButton();
+    renderBreakButton();
+  } catch (err) {
+    console.error(err);
+    hasError = true;
+    statusText.textContent = t("couldntConnect");
+    lastPunchText.textContent = err.code ? "(" + err.code + ")" : "";
+    renderButton();
+  }
+}
+
+function renderBreakButton() {
+  if (currentStatus === "in" && lastPunchDeviceId === deviceId && !hasError) {
+    breakBtn.classList.remove("hidden");
+    breakBtn.textContent = onBreak ? t("endBreak") : t("startBreak");
+  } else {
+    breakBtn.classList.add("hidden");
+  }
+}
+
+breakBtn.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const action = onBreak ? "break_end" : "break_start";
+  breakBtn.disabled = true;
+  try {
+    await punches.add({
+      name,
+      action,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      deviceId
+    });
+    await statusCol.doc(name).update({ onBreak: !onBreak });
+    onBreak = !onBreak;
+    renderBreakButton();
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't update break status: " + (err.code || err.message));
+  }
+  breakBtn.disabled = false;
+});
+
+function renderButton() {
+  if (hasError) {
+    punchBtn.disabled = false;
+    punchBtn.textContent = t("tapToRetry");
+    punchBtn.className = "punch out";
+    return;
+  }
+  if (locState === "checking") {
+    punchBtn.disabled = true;
+    punchBtn.textContent = t("checkingLocation");
+    punchBtn.className = "punch in";
+    return;
+  }
+  if (locState === "denied" || locState === "error") {
+    punchBtn.disabled = false;
+    punchBtn.textContent = t("enableLocation");
+    punchBtn.className = "punch out";
+    return;
+  }
+  if (locState === "out") {
+    punchBtn.disabled = false;
+    punchBtn.textContent = t("checkLocationAgain");
+    punchBtn.className = "punch out";
+    return;
+  }
+  if (currentStatus === null) {
+    punchBtn.disabled = true;
+    punchBtn.textContent = t("loading");
+    punchBtn.className = "punch in";
+    return;
+  }
+  punchBtn.disabled = false;
+  if (currentStatus === "in") {
+    punchBtn.textContent = t("clockOut");
+    punchBtn.className = "punch out";
+  } else {
+    punchBtn.textContent = t("clockIn");
+    punchBtn.className = "punch in";
+  }
+}
+
+punchBtn.addEventListener("click", async () => {
+  if (hasError) { refreshStatus(); return; }
+  if (locState === "denied" || locState === "error" || locState === "out") { checkLocation(); return; }
+  if (locState === "checking") { return; }
+
+  const name = employeeSelect.value;
+  const action = currentStatus === "in" ? "out" : "in";
+
+  if (action === "out" && lastPunchDeviceId && lastPunchDeviceId !== deviceId) {
+    statusText.textContent = "Locked to another device";
+    lastPunchText.textContent = name + " has to clock out from the phone they clocked in on.";
+    return;
+  }
+
+  if (action === "out" && onBreak) {
+    statusText.textContent = t("stillOnBreak");
+    lastPunchText.textContent = t("endBreakFirst");
+    return;
+  }
+
+  const pinOk = await requestPin(name);
+  if (!pinOk) return;
+
+  punchBtn.disabled = true;
+  punchBtn.textContent = "Checking location…";
+
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const nearest = nearestJobSite(pos.coords.latitude, pos.coords.longitude);
+      if (ENFORCE_JOB_SITE_RADIUS && nearest.dist > RADIUS_FEET) {
+        locState = "out";
+        locDistanceFt = Math.round(nearest.dist);
+        locSiteName = nearest.site.name;
+        renderLocationText();
+        renderButton();
+        return;
+      }
+      let report = null;
+      if (action === "out") {
+        report = await requestReport(name);
+        if (!report) {
+          renderButton();
+          return;
+        }
+      }
+      const selfie = await requestSelfie(name, action);
+      if (!selfie) {
+        renderButton();
+        return;
+      }
+
+      punchBtn.textContent = "Saving…";
+      try {
+        const payload = {
+          name,
+          action,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          accuracy: Math.round(pos.coords.accuracy || 0),
+          deviceId,
+          site: nearest.dist <= RADIUS_FEET ? nearest.site.name : "Off-site"
+        };
+        if (report) {
+          payload.description = report.description;
+          if (report.photo) payload.photo = report.photo;
+        }
+        if (selfie) payload.selfie = selfie;
+        const batch = db.batch();
+        batch.set(punches.doc(), payload);
+        batch.set(statusCol.doc(name), payload);
+        await batch.commit();
+        await refreshStatus();
+      } catch (err) {
+        punchBtn.textContent = "Couldn't save — tap to retry";
+        punchBtn.disabled = false;
+        console.error(err);
+      }
+    },
+    err => {
+      console.error(err);
+      locState = err.code === 1 ? "denied" : "error";
+      renderLocationText();
+      renderButton();
+    },
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  );
+});
+
+employeeSelect.addEventListener("change", refreshStatus);
+refreshStatus();
+checkLocation();
+applyLanguage();
+if (window.warmupFaceModels) window.warmupFaceModels();
+
+myHoursLink.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const ok = await requestPin(name);
+  if (!ok) return;
+  myHoursTitle.textContent = name + "'s hours";
+  const today = new Date();
+  myHoursDate.value = today.toISOString().slice(0, 10);
+  clockView.classList.add("hidden");
+  myHoursView.classList.remove("hidden");
+  loadMyHours(name, myHoursDate.value);
+});
+myHoursDate.addEventListener("change", () => loadMyHours(employeeSelect.value, myHoursDate.value));
+myHoursBackBtn.addEventListener("click", () => {
+  myHoursView.classList.add("hidden");
+  clockView.classList.remove("hidden");
+});
+
+function weekRangeFor(dateStr) {
+  const d = new Date(dateStr + "T00:00:00");
+  const day = d.getDay(); // 0=Sun..6=Sat
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(d);
+  monday.setDate(d.getDate() + diffToMonday);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = dt => dt.toISOString().slice(0, 10);
+  return { start: fmt(monday), end: fmt(sunday) };
+}
+
+signOffWeekBtn.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const { start, end } = weekRangeFor(myHoursDate.value || new Date().toISOString().slice(0, 10));
+  signOffStatus.textContent = "Checking…";
+  try {
+    const docId = name.replace(/\s+/g, "_") + "_" + start;
+    const existing = await signoffsCol.doc(docId).get();
+    if (existing.exists) {
+      signOffStatus.textContent = "Already signed off for " + start + " to " + end + " on " + existing.data().signedAt.toDate().toLocaleString();
+      return;
+    }
+    const rangeStart = new Date(start + "T00:00:00");
+    const rangeEnd = new Date(end + "T23:59:59.999");
+    const snap = await punches.where("name", "==", name).get();
+    const rows = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.timestamp && data.timestamp.toDate() >= rangeStart && data.timestamp.toDate() <= rangeEnd) rows.push(data);
+    });
+    const { hours } = computeHoursValue(rows);
+    if (!confirm("Sign off " + hours.toFixed(2) + " hrs for the week of " + start + " to " + end + "? This can't be undone.")) {
+      signOffStatus.textContent = "";
+      return;
+    }
+    await signoffsCol.doc(docId).set({
+      name,
+      weekStart: start,
+      weekEnd: end,
+      totalHours: hours,
+      signedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    signOffStatus.textContent = "Signed off " + hours.toFixed(2) + " hrs for the week of " + start + " to " + end + ".";
+  } catch (err) {
+    console.error(err);
+    signOffStatus.textContent = "Couldn't sign off: " + (err.code || err.message);
+  }
+});
+
+myUploadsLink.addEventListener("click", async () => {
+  const name = employeeSelect.value;
+  const ok = await requestPin(name);
+  if (!ok) return;
+  myUploadsTitle.textContent = name + "'s uploads";
+  clockView.classList.add("hidden");
+  myUploadsView.classList.remove("hidden");
+  loadMyUploads(name);
+});
+myUploadsBackBtn.addEventListener("click", () => {
+  myUploadsView.classList.add("hidden");
+  clockView.classList.remove("hidden");
+});
+
+async function loadMyUploads(name) {
+  myUploadsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await punches.where("name", "==", name).get();
+    const rows = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (!data.timestamp) return;
+      if (data.photo) rows.push({ timestamp: data.timestamp, photo: data.photo, kind: "Field ticket" });
+      if (data.selfie) rows.push({ timestamp: data.timestamp, photo: data.selfie, kind: (data.action === "out" ? "Clock-out selfie" : "Clock-in selfie") });
+    });
+    rows.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
+
+    if (!rows.length) {
+      myUploadsWrap.innerHTML = "<div class=\"empty\">No photos yet.</div>";
+      return;
+    }
+
+    let html = "";
+    rows.forEach(r => {
+      const t = r.timestamp.toDate().toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      html += `<div style="margin-bottom:16px;"><p style="font-size:13px;color:var(--ink);margin:0 0 6px;">${r.kind} — ${t}</p><img src="${r.photo}" style="max-width:100%;border-radius:8px;"></div>`;
+    });
+    myUploadsWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    myUploadsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+
+async function loadMyHours(name, dateStr) {
+  myHoursWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await punches.where("name", "==", name).get();
+    const start = new Date(dateStr + "T00:00:00");
+    const end = new Date(dateStr + "T23:59:59.999");
+    const rows = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.timestamp && data.timestamp.toDate() >= start && data.timestamp.toDate() <= end) rows.push(data);
+    });
+    rows.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+
+    if (!rows.length) {
+      myHoursWrap.innerHTML = "<div class=\"empty\">No punches on this date.</div>";
+      return;
+    }
+
+    let html = "<table><thead><tr><th>Action</th><th>Time</th></tr></thead><tbody>";
+    rows.forEach(r => {
+      const t = r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      html += `<tr><td><span class="tag ${r.action}">${r.action.toUpperCase()}</span></td><td>${t}</td></tr>`;
+    });
+    html += "</tbody></table>";
+
+    const withNotes = rows.filter(r => r.description);
+    if (withNotes.length) {
+      html += "<div class=\"totals\"><h3>Work summary</h3>";
+      withNotes.forEach(r => {
+        const t = r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        html += `<div style="padding:10px 0;border-bottom:1px solid var(--line);"><strong>${t}</strong><p style="margin:4px 0;">${escapeHtml(r.description)}</p>`;
+        if (r.photo) html += `<img src="${r.photo}" style="max-width:100%;border-radius:8px;margin-top:6px;">`;
+        html += "</div>";
+      });
+      html += "</div>";
+    }
+
+    myHoursWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    myHoursWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+
+/* ---------------- Admin view ---------------- */
+
+const clockView = document.getElementById("clockView");
+const lockView = document.getElementById("lockView");
+const adminView = document.getElementById("admin");
+const openAdminLink = document.getElementById("openAdminLink");
+const backToClockLink = document.getElementById("backToClockLink");
+const backToClockBtn = document.getElementById("backToClockBtn");
+const passcodeInput = document.getElementById("passcodeInput");
+const unlockBtn = document.getElementById("unlockBtn");
+const dateFilter = document.getElementById("dateFilter");
+const logTableWrap = document.getElementById("logTableWrap");
+const totalsWrap = document.getElementById("totalsWrap");
+const exportBtn = document.getElementById("exportBtn");
+
+function showView(view) {
+  clockView.classList.add("hidden");
+  lockView.classList.add("hidden");
+  adminView.classList.add("hidden");
+  view.classList.remove("hidden");
+}
+
+openAdminLink.addEventListener("click", () => showView(lockView));
+backToClockLink.addEventListener("click", () => showView(clockView));
+backToClockBtn.addEventListener("click", () => showView(clockView));
+
+unlockBtn.addEventListener("click", () => {
+  if (passcodeInput.value === ADMIN_PASSCODE) {
+    passcodeInput.value = "";
+    const today = new Date();
+    dateFilter.value = today.toISOString().slice(0, 10);
+    showView(adminView);
+    loadFaceAlerts();
+    loadFaceProfiles();
+    loadLog();
+    loadAdminUploads();
+    loadCurrentlyIn();
+  } else {
+    passcodeInput.value = "";
+    passcodeInput.placeholder = "Wrong passcode — try again";
+  }
+});
+
+let currentRows = [];
+
+async function loadLog() {
+  logTableWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  totalsWrap.innerHTML = "";
+  const day = dateFilter.value;
+  const start = new Date(day + "T00:00:00");
+  const end = new Date(day + "T23:59:59.999");
+
+  try {
+    const snap = await punches
+      .where("timestamp", ">=", start)
+      .where("timestamp", "<=", end)
+      .orderBy("timestamp", "asc")
+      .get();
+
+    currentRows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTable(currentRows);
+  } catch (err) {
+    console.error(err);
+    logTableWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+
+function computeHoursValue(events) {
+  let totalMs = 0;
+  let openIn = null;
+  let breakMs = 0;
+  let openBreak = null;
+  events.forEach(e => {
+    if (e.action === "in") {
+      openIn = e.timestamp.toDate();
+    } else if (e.action === "out" && openIn) {
+      totalMs += e.timestamp.toDate() - openIn;
+      openIn = null;
+    } else if (e.action === "break_start") {
+      openBreak = e.timestamp.toDate();
+    } else if (e.action === "break_end" && openBreak) {
+      breakMs += e.timestamp.toDate() - openBreak;
+      openBreak = null;
+    }
+  });
+  return { hours: (totalMs - breakMs) / 3600000, breakHours: breakMs / 3600000, stillIn: !!openIn };
+}
+function computeHours(events) {
+  const { hours, stillIn } = computeHoursValue(events);
+  return hours.toFixed(2) + " hrs" + (stillIn ? " (still clocked in)" : "");
+}
+
+// Groups punches into Monday–Sunday weeks so overtime (over 40 hrs) is
+// judged per week, not across whatever date range was picked.
+function splitIntoWeeks(rows) {
+  const weeks = {};
+  rows.forEach(r => {
+    if (!r.timestamp) return;
+    const d = r.timestamp.toDate();
+    const day = d.getDay();
+    const diffToMonday = day === 0 ? -6 : 1 - day;
+    const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMonday);
+    const key = monday.getFullYear() + "-" + String(monday.getMonth() + 1).padStart(2, "0") + "-" + String(monday.getDate()).padStart(2, "0");
+    if (!weeks[key]) weeks[key] = [];
+    weeks[key].push(r);
+  });
+  return weeks;
+}
+
+function renderTable(rows) {
+  if (!rows.length) {
+    logTableWrap.innerHTML = "<div class=\"empty\">No punches on this date.</div>";
+    return;
+  }
+  const byEmployee = {};
+  rows.forEach(r => {
+    if (!byEmployee[r.name]) byEmployee[r.name] = [];
+    byEmployee[r.name].push(r);
+  });
+  const names = Object.keys(byEmployee).sort();
+
+  let html = "";
+  names.forEach(name => {
+    const events = byEmployee[name];
+    html += `<div class="emp-group"><div class="emp-header"><h3 class="emp-name">${escapeHtml(name)}</h3><span class="emp-hours">${computeHours(events)}</span></div>`;
+    html += "<table><thead><tr><th>Action</th><th>Time</th><th>Coordinates</th><th></th></tr></thead><tbody>";
+    events.forEach(r => {
+      const t = r.timestamp ? r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "—";
+      const loc = coordLink(r);
+      html += `<tr><td><span class="tag ${r.action}">${r.action.toUpperCase()}</span></td><td>${t}</td><td>${loc}</td><td><button class="btn-small edit-punch" data-id="${r.id}" style="padding:4px 8px;font-size:12px;">Edit</button> <button class="btn-small delete-punch" data-id="${r.id}" style="padding:4px 8px;font-size:12px;">Delete</button></td></tr>`;
+    });
+    html += "</tbody></table></div>";
+  });
+  logTableWrap.innerHTML = html;
+
+  logTableWrap.querySelectorAll(".edit-punch").forEach(btn => {
+    btn.addEventListener("click", () => editPunch(btn.dataset.id));
+  });
+  logTableWrap.querySelectorAll(".delete-punch").forEach(btn => {
+    btn.addEventListener("click", () => deletePunch(btn.dataset.id));
+  });
+}
+
+dateFilter.addEventListener("change", loadLog);
+
+async function editPunch(id) {
+  const row = currentRows.find(r => r.id === id);
+  if (!row || !row.timestamp) return;
+  const current = row.timestamp.toDate();
+  const hh = String(current.getHours()).padStart(2, "0");
+  const mm = String(current.getMinutes()).padStart(2, "0");
+  const input = prompt("New time for this punch (24-hour HH:MM), date stays " + dateFilter.value + ":", hh + ":" + mm);
+  if (input === null) return;
+  const match = input.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) { alert("Enter time as HH:MM, e.g. 14:30"); return; }
+  const newDate = new Date(current);
+  newDate.setHours(parseInt(match[1], 10), parseInt(match[2], 10), 0, 0);
+  try {
+    await punches.doc(id).update({ timestamp: firebase.firestore.Timestamp.fromDate(newDate) });
+    loadLog();
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't update that punch: " + (err.code || err.message));
+  }
+}
+
+async function deletePunch(id) {
+  if (!confirm("Delete this punch? This can't be undone.")) return;
+  try {
+    await punches.doc(id).delete();
+    loadLog();
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't delete that punch: " + (err.code || err.message));
+  }
+}
+
+exportBtn.addEventListener("click", () => {
+  if (!currentRows.length) return;
+  let csv = "Employee,Action,Timestamp,Latitude,Longitude,Accuracy (m)\n";
+  currentRows.forEach(r => {
+    const iso = r.timestamp ? r.timestamp.toDate().toISOString() : "";
+    csv += `"${r.name.replace(/"/g, '""')}",${r.action},${iso},${r.lat ?? ""},${r.lng ?? ""},${r.accuracy ?? ""}\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `time-log-${dateFilter.value}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+[...EMPLOYEES].sort((a, b) => a.localeCompare(b)).forEach(name => {
+  const opt = document.createElement("option");
+  opt.value = name;
+  opt.textContent = name;
+  replayEmployeeSelect.appendChild(opt);
+});
+
+let replayMapInstance = null;
+
+async function showReplay() {
+  const name = replayEmployeeSelect.value;
+  const day = dateFilter.value;
+  replayMapWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await tracksCol.where("name", "==", name).get();
+    const start = new Date(day + "T00:00:00");
+    const end = new Date(day + "T23:59:59.999");
+    const pts = [];
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.timestamp && data.timestamp.toDate() >= start && data.timestamp.toDate() <= end) pts.push(data);
+    });
+    pts.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+
+    if (!pts.length) {
+      replayMapWrap.innerHTML = "<div class=\"empty\">No tracked locations for this person on this date.</div>";
+      return;
+    }
+
+    replayMapWrap.innerHTML = '<div id="replayMap" style="height:360px;border-radius:12px;"></div>';
+    if (replayMapInstance) { replayMapInstance.remove(); replayMapInstance = null; }
+
+    const map = L.map("replayMap");
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19
+    }).addTo(map);
+
+    const latlngs = pts.map(p => [p.lat, p.lng]);
+    const line = L.polyline(latlngs, { color: "#3b82f6", weight: 4 }).addTo(map);
+    map.fitBounds(line.getBounds(), { padding: [24, 24] });
+
+    const fmt = ts => ts.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    L.marker(latlngs[0]).addTo(map).bindPopup("Start — " + fmt(pts[0].timestamp));
+    L.marker(latlngs[latlngs.length - 1]).addTo(map).bindPopup("End — " + fmt(pts[pts.length - 1].timestamp));
+    pts.forEach((p, i) => {
+      if (i === 0 || i === pts.length - 1) return;
+      L.circleMarker([p.lat, p.lng], { radius: 5, color: "#2563eb", fillOpacity: 0.9 })
+        .addTo(map)
+        .bindPopup(fmt(p.timestamp));
+    });
+    JOB_SITES.forEach(site => {
+      L.circleMarker([site.lat, site.lng], { radius: 8, color: "#e0483c", fillOpacity: 0.5 })
+        .addTo(map)
+        .bindPopup(site.name);
+    });
+
+    replayMapInstance = map;
+  } catch (err) {
+    console.error(err);
+    replayMapWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+replayShowBtn.addEventListener("click", showReplay);
+
+periodShowBtn.addEventListener("click", async () => {
+  const startDate = periodStart.value;
+  const endDate = periodEnd.value;
+  if (!startDate || !endDate) {
+    periodTotalsWrap.innerHTML = "<div class=\"empty\">Pick both a start and end date.</div>";
+    return;
+  }
+  periodTotalsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const start = new Date(startDate + "T00:00:00");
+    const end = new Date(endDate + "T23:59:59.999");
+    const snap = await punches.where("timestamp", ">=", start).where("timestamp", "<=", end).orderBy("timestamp", "asc").get();
+    const rows = snap.docs.map(d => d.data());
+    if (!rows.length) {
+      periodTotalsWrap.innerHTML = "<div class=\"empty\">No punches in that range.</div>";
+      return;
+    }
+    const byEmployee = {};
+    rows.forEach(r => { if (!byEmployee[r.name]) byEmployee[r.name] = []; byEmployee[r.name].push(r); });
+    const names = Object.keys(byEmployee).sort();
+    let html = "<table><thead><tr><th>Employee</th><th>Work hours</th><th>Break hours</th><th>Overtime (over 40/wk)</th></tr></thead><tbody>";
+    names.forEach(name => {
+      let totalWork = 0, totalBreak = 0, totalOT = 0;
+      const weeks = splitIntoWeeks(byEmployee[name]);
+      Object.values(weeks).forEach(weekEvents => {
+        const { hours, breakHours } = computeHoursValue(weekEvents);
+        totalWork += hours;
+        totalBreak += breakHours;
+        if (hours > 40) totalOT += hours - 40;
+      });
+      const otCell = totalOT > 0 ? `<span style="color:var(--danger);">⚠️ ${totalOT.toFixed(2)} hrs</span>` : "—";
+      html += `<tr><td>${escapeHtml(name)}</td><td>${totalWork.toFixed(2)} hrs</td><td>${totalBreak.toFixed(2)} hrs</td><td>${otCell}</td></tr>`;
+    });
+    html += "</tbody></table>";
+    html += "<p style=\"font-size:12px;color:var(--muted);margin-top:10px;\">Work hours already exclude break time. Overtime counts hours over 40 in each Monday–Sunday week.</p>";
+    periodTotalsWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    periodTotalsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+});
+
+emailSummaryBtn.addEventListener("click", () => {
+  const day = dateFilter.value;
+  if (!currentRows.length) {
+    alert("Load a date in the Time log above first, then try again.");
+    return;
+  }
+  const byEmployee = {};
+  currentRows.forEach(r => { if (!byEmployee[r.name]) byEmployee[r.name] = []; byEmployee[r.name].push(r); });
+  const names = Object.keys(byEmployee).sort();
+  let body = "Time Clock summary for " + day + "\n\n";
+  names.forEach(name => {
+    body += name + ": " + computeHours(byEmployee[name]) + "\n";
+    byEmployee[name].forEach(r => {
+      if (r.action !== "in" && r.action !== "out") return;
+      const tm = r.timestamp ? r.timestamp.toDate().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
+      const where = (r.lat != null && r.lng != null)
+        ? r.lat.toFixed(5) + ", " + r.lng.toFixed(5) + " — https://maps.google.com/?q=" + r.lat + "," + r.lng
+        : "no location";
+      body += "   " + r.action.toUpperCase() + " " + tm + " at " + where + "\n";
+    });
+    body += "\n";
+  });
+  const subject = encodeURIComponent("Time Clock summary — " + day);
+  const mailBody = encodeURIComponent(body);
+  window.location.href = "mailto:?subject=" + subject + "&body=" + mailBody;
+});
+
+async function loadFaceAlerts() {
+  faceAlertsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await faceAlertsCol.orderBy("timestamp", "desc").limit(50).get();
+    if (snap.empty) {
+      faceAlertsWrap.innerHTML = "<div class=\"empty\">No mismatches — all clear.</div>";
+      return;
+    }
+    let html = "";
+    snap.forEach(d => {
+      const r = d.data();
+      const when = r.timestamp
+        ? r.timestamp.toDate().toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+        : "—";
+      const what = r.action === "out" ? "CLOCK OUT" : "CLOCK IN";
+      html += `<div style="margin-bottom:16px;padding:12px;border:1px solid var(--red);border-radius:10px;">
+        <p style="font-size:13px;color:var(--ink);margin:0 0 8px;"><strong style="color:var(--red);">${escapeHtml(r.name)}</strong> — different face tried to ${what} — ${when}</p>
+        <div style="display:flex;gap:10px;">
+          <div style="flex:1;"><p style="font-size:11px;color:var(--muted);margin:0 0 4px;">On file</p>${r.referencePhoto ? `<img src="${r.referencePhoto}" style="width:100%;border-radius:8px;">` : "—"}</div>
+          <div style="flex:1;"><p style="font-size:11px;color:var(--muted);margin:0 0 4px;">This attempt</p><img src="${r.attemptPhoto}" style="width:100%;border-radius:8px;"></div>
+        </div>
+        <button class="btn-small dismiss-alert" data-id="${d.id}" style="margin-top:8px;">Dismiss</button>
+      </div>`;
+    });
+    faceAlertsWrap.innerHTML = html;
+    faceAlertsWrap.querySelectorAll(".dismiss-alert").forEach(btn => {
+      btn.addEventListener("click", () => dismissAlert(btn.dataset.id));
+    });
+  } catch (err) {
+    console.error(err);
+    faceAlertsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+async function dismissAlert(id) {
+  try {
+    await faceAlertsCol.doc(id).delete();
+    loadFaceAlerts();
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't dismiss: " + (err.code || err.message));
+  }
+}
+refreshAlertsBtn.addEventListener("click", loadFaceAlerts);
+
+async function loadFaceProfiles() {
+  faceProfilesWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await faceProfilesCol.get();
+    const profiles = {};
+    snap.forEach(d => { profiles[d.id] = d.data(); });
+    let html = "";
+    [...EMPLOYEES].sort((a, b) => a.localeCompare(b)).forEach(name => {
+      const p = profiles[name];
+      const enrolled = p && p.updatedAt
+        ? p.updatedAt.toDate().toLocaleString([], { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })
+        : "";
+      html += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);">
+        ${p && p.photo ? `<img src="${p.photo}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">` : `<div style="width:64px;height:64px;border-radius:8px;background:var(--field);"></div>`}
+        <div style="flex:1;">
+          <div style="font-size:14px;color:var(--ink);"><strong>${escapeHtml(name)}</strong></div>
+          <div style="font-size:12px;color:var(--muted);">${p ? "On file since " + enrolled : "No face on file yet — the next clock-in will set it"}</div>
+        </div>
+        ${p ? `<button class="btn-small reset-face" data-name="${escapeHtml(name)}">Reset face</button>` : ""}
+      </div>`;
+    });
+    faceProfilesWrap.innerHTML = html;
+    faceProfilesWrap.querySelectorAll(".reset-face").forEach(btn => {
+      btn.addEventListener("click", () => resetFace(btn.dataset.name));
+    });
+  } catch (err) {
+    console.error(err);
+    faceProfilesWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+async function resetFace(name) {
+  if (!confirm("Reset " + name + "'s face on file? The next time they clock in or out, whatever face is in that selfie becomes their new one on file.")) return;
+  try {
+    await faceProfilesCol.doc(name).delete();
+    loadFaceProfiles();
+  } catch (err) {
+    console.error(err);
+    alert("Couldn't reset: " + (err.code || err.message));
+  }
+}
+refreshProfilesBtn.addEventListener("click", loadFaceProfiles);
+
+async function loadCurrentlyIn() {
+  currentlyInWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await statusCol.where("action", "==", "in").get();
+    const rows = [];
+    snap.forEach(d => { const data = d.data(); if (data.timestamp) rows.push(data); });
+    rows.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+
+    if (!rows.length) {
+      currentlyInWrap.innerHTML = "<div class=\"empty\">Nobody is currently clocked in.</div>";
+      return;
+    }
+
+    const now = Date.now();
+    let html = "<table><thead><tr><th>Employee</th><th>Since</th><th>Elapsed</th><th>Clocked in at</th></tr></thead><tbody>";
+    rows.forEach(r => {
+      const since = r.timestamp.toDate();
+      const hrs = (now - since.getTime()) / 3600000;
+      const elapsed = hrs.toFixed(1) + " hrs" + (hrs >= 16 ? " ⚠️" : "");
+      const rowStyle = hrs >= 16 ? ' style="color:#ff6b6b;"' : "";
+      html += `<tr${rowStyle}><td>${escapeHtml(r.name)}</td><td>${fmtTime(r.timestamp)}</td><td>${elapsed}</td><td>${coordLink(r)}</td></tr>`;
+    });
+    html += "</tbody></table>";
+    html += "<p style=\"font-size:12px;color:var(--muted);margin-top:10px;\">⚠️ = clocked in over 16 hours — likely forgot to clock out.</p>";
+    currentlyInWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    currentlyInWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+refreshCurrentBtn.addEventListener("click", loadCurrentlyIn);
+
+cleanupTracksBtn.addEventListener("click", async () => {
+  if (!confirm("Delete all GPS tracking points older than 90 days? This can't be undone.")) return;
+  maintenanceStatus.textContent = "Deleting…";
+  try {
+    const cutoff = new Date(Date.now() - 90 * 24 * 3600000);
+    let deleted = 0;
+    let more = true;
+    while (more) {
+      const snap = await tracksCol.where("timestamp", "<", cutoff).limit(400).get();
+      if (snap.empty) { more = false; break; }
+      const batch = db.batch();
+      snap.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+      deleted += snap.size;
+      if (snap.size < 400) more = false;
+    }
+    maintenanceStatus.textContent = "Deleted " + deleted + " old GPS points.";
+  } catch (err) {
+    console.error(err);
+    maintenanceStatus.textContent = "Couldn't clean up: " + (err.code || err.message);
+  }
+});
+
+purgePhotosBtn.addEventListener("click", async () => {
+  if (!confirm("Delete all selfies and field-ticket photos older than 90 days? Hours and punch times stay. Download a full backup first if you want to keep the photos. This can't be undone.")) return;
+  maintenanceStatus.textContent = "Deleting old photos…";
+  try {
+    const cutoff = new Date(Date.now() - 90 * 24 * 3600000);
+    const sinceMs = parseInt(localStorage.getItem("tc_photos_purged_through") || "0", 10);
+    let query = punches.where("timestamp", "<", cutoff);
+    if (sinceMs) query = query.where("timestamp", ">", new Date(sinceMs));
+    query = query.orderBy("timestamp", "asc");
+    let cleared = 0;
+    let last = null;
+    let more = true;
+    while (more) {
+      let q = query.limit(300);
+      if (last) q = q.startAfter(last);
+      const snap = await q.get();
+      if (snap.empty) break;
+      const batch = db.batch();
+      let n = 0;
+      snap.forEach(d => {
+        const r = d.data();
+        if (r.photo || r.selfie) {
+          batch.update(d.ref, {
+            photo: firebase.firestore.FieldValue.delete(),
+            selfie: firebase.firestore.FieldValue.delete()
+          });
+          n++;
+        }
+      });
+      if (n) await batch.commit();
+      cleared += n;
+      last = snap.docs[snap.docs.length - 1];
+      if (snap.size < 300) more = false;
+    }
+    localStorage.setItem("tc_photos_purged_through", String(cutoff.getTime()));
+    maintenanceStatus.textContent = "Removed photos from " + cleared + " old punches.";
+  } catch (err) {
+    console.error(err);
+    maintenanceStatus.textContent = "Couldn't delete photos: " + (err.code || err.message);
+  }
+});
+
+deleteAllPhotosBtn.addEventListener("click", async () => {
+  if (!confirm("Delete EVERY selfie and field-ticket photo, no matter how old? Hours and punch times stay. Faces on file (used for recognition) are not touched. Download a full backup first if you want to keep any of them. This can't be undone.")) return;
+  const typed = prompt("To confirm, type DELETE in capital letters:");
+  if (typed !== "DELETE") { maintenanceStatus.textContent = "Cancelled — nothing was deleted."; return; }
+  maintenanceStatus.textContent = "Deleting all photos…";
+  try {
+    let cleared = 0;
+    let last = null;
+    let more = true;
+    while (more) {
+      let q = punches.orderBy("timestamp", "asc").limit(300);
+      if (last) q = q.startAfter(last);
+      const snap = await q.get();
+      if (snap.empty) break;
+      const batch = db.batch();
+      let n = 0;
+      snap.forEach(d => {
+        const r = d.data();
+        if (r.photo || r.selfie) {
+          batch.update(d.ref, {
+            photo: firebase.firestore.FieldValue.delete(),
+            selfie: firebase.firestore.FieldValue.delete()
+          });
+          n++;
+        }
+      });
+      if (n) await batch.commit();
+      cleared += n;
+      last = snap.docs[snap.docs.length - 1];
+      if (snap.size < 300) more = false;
+    }
+
+    // The quick-lookup status record for each person also holds their latest photos.
+    const statusSnap = await statusCol.get();
+    const statusBatch = db.batch();
+    let statusCleared = 0;
+    statusSnap.forEach(d => {
+      const r = d.data();
+      if (r.photo || r.selfie) {
+        statusBatch.update(d.ref, {
+          photo: firebase.firestore.FieldValue.delete(),
+          selfie: firebase.firestore.FieldValue.delete()
+        });
+        statusCleared++;
+      }
+    });
+    if (statusCleared) await statusBatch.commit();
+
+    // Any photos saved by the old standalone upload button.
+    const uploadsSnap = await uploadsCol.get();
+    if (!uploadsSnap.empty) {
+      const uploadsBatch = db.batch();
+      uploadsSnap.forEach(d => uploadsBatch.delete(d.ref));
+      await uploadsBatch.commit();
+    }
+
+    localStorage.setItem("tc_photos_purged_through", String(Date.now()));
+    maintenanceStatus.textContent = "Removed photos from " + cleared + " punches. All photos are gone.";
+    loadAdminUploads();
+  } catch (err) {
+    console.error(err);
+    maintenanceStatus.textContent = "Couldn't delete all photos: " + (err.code || err.message);
+  }
+});
+
+fullBackupBtn.addEventListener("click", async () => {
+  maintenanceStatus.textContent = "Building backup…";
+  try {
+    const collections = { punches, status: statusCol, uploads: uploadsCol, tracks: tracksCol, signoffs: signoffsCol };
+    const backup = {};
+    for (const key in collections) {
+      const snap = await collections[key].get();
+      backup[key] = snap.docs.map(d => {
+        const data = d.data();
+        if (data.timestamp && typeof data.timestamp.toDate === "function") {
+          data.timestamp = data.timestamp.toDate().toISOString();
+        }
+        return { id: d.id, ...data };
+      });
+    }
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `time-clock-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    maintenanceStatus.textContent = "Backup downloaded.";
+  } catch (err) {
+    console.error(err);
+    maintenanceStatus.textContent = "Couldn't build backup: " + (err.code || err.message);
+  }
+});
+
+async function loadAdminUploads() {
+  adminUploadsWrap.innerHTML = "<div class=\"empty\">Loading…</div>";
+  try {
+    const snap = await punches.orderBy("timestamp", "desc").limit(300).get();
+    const photos = [];
+    snap.forEach(d => {
+      const r = d.data();
+      if (r.photo) photos.push({ name: r.name, timestamp: r.timestamp, kind: "Field ticket", src: r.photo });
+      if (r.selfie) photos.push({ name: r.name, timestamp: r.timestamp, kind: (r.action === "out" ? "Clock-out selfie" : "Clock-in selfie"), src: r.selfie });
+    });
+    if (!photos.length) {
+      adminUploadsWrap.innerHTML = "<div class=\"empty\">No photos yet.</div>";
+      return;
+    }
+    let html = "";
+    photos.forEach(p => {
+      const t = p.timestamp
+        ? p.timestamp.toDate().toLocaleString([], { weekday: "short", month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" })
+        : "—";
+      html += `<div style="margin-bottom:16px;"><p style="font-size:13px;color:var(--ink);margin:0 0 6px;"><strong>${escapeHtml(p.name)}</strong> — ${p.kind} — ${t}</p><img src="${p.src}" style="max-width:100%;border-radius:8px;"></div>`;
+    });
+    adminUploadsWrap.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    adminUploadsWrap.innerHTML = "<div class=\"empty\">Couldn't load: " + (err.code || err.message) + "</div>";
+  }
+}
+</script>
+</body>
+</html>
