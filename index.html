@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="M&E Sales">
+<meta name="theme-color" content="#0B5C8E">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AgMAAABAo+6hAAAACVBMVEX////1yDILXI6oEuFZAAAAwUlEQVR42u3ZQQrCMBCF4UzNAbLxPrmEPWPRS+RIOUAkrgpVUHiLX0Redy0fj2GaNlMa1yQcS7K2tra2/n+dn0/XtGxUdkqn28uFc1WyK9eTAPudJV3ASqqiA1yDGcwukq5cJQE+xVnSBaykKjrAN1sGs4ukO1jJALOnlt3AVdUlPcBKJrkXN0l3sJIBZk8tu4E7YJf0ACuZ5ITXPk1h94tnZGtra2tra2tr63df7Id/R+uesLmDv3d33BNra+vv6QcUcRe/x7rU7wAAAABJRU5ErkJggg==">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0AgMAAABAo+6hAAAACVBMVEX////1yDILXI6oEuFZAAAAwUlEQVR42u3ZQQrCMBCF4UzNAbLxPrmEPWPRS+RIOUAkrgpVUHiLX0Redy0fj2GaNlMa1yQcS7K2tra2/n+dn0/XtGxUdkqn28uFc1WyK9eTAPudJV3ASqqiA1yDGcwukq5cJQE+xVnSBaykKjrAN1sGs4ukO1jJALOnlt3AVdUlPcBKJrkXN0l3sJIBZk8tu4E7YJf0ACuZ5ITXPk1h94tnZGtra2tra2tr63df7Id/R+uesLmDv3d33BNra+vv6QcUcRe/x7rU7wAAAABJRU5ErkJggg==">
+<title>M&amp;E Sales Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E7EAE8; --card:#FFFFFF; --ink:#16212B; --muted:#56626B; --line:#CDD4D1;
+  --blue:#0B5C8E; --blue-ink:#FFFFFF;
+  --red:#C8252F; --yellow:#E8B400; --yellow-ink:#7E6100; --green:#2C8440;
+  --red-bg:#FBE9EA; --yellow-bg:#FFF5D1; --green-bg:#E4F2E7; --blue-bg:#E1EEF6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#10171D; --card:#1A242C; --ink:#E8EDF0; --muted:#9AA7B0; --line:#2C3943;
+    --blue:#4AA3DB; --blue-ink:#06121B;
+    --red:#F0646D; --yellow:#F5C832; --yellow-ink:#F5C832; --green:#5DC476;
+    --red-bg:#3A1D21; --yellow-bg:#383015; --green-bg:#17331F; --blue-bg:#15303F;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:'Barlow',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:'Barlow Condensed','Arial Narrow',sans-serif;margin:0;line-height:1.1}
+p{margin:0}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.muted,.meta{color:var(--muted)}
+.meta{font-size:14px;display:block}
+
+/* Shell */
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(12px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+.brand{font:600 14px 'Barlow',sans-serif;color:var(--muted)}
+header.top h1{font-size:32px;font-weight:700}
+.offline{background:var(--yellow-bg);color:var(--yellow-ink);font-weight:600;font-size:14px;padding:6px 16px;text-align:center}
+.icon-btn{background:none;border:0;color:var(--ink);width:44px;height:44px;display:grid;place-items:center;border-radius:10px;cursor:pointer}
+main{max-width:720px;margin:0 auto;padding:16px 14px calc(96px + env(safe-area-inset-bottom,0px))}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{background:none;border:0;padding:9px 0 8px;font:600 14px 'Barlow Condensed',sans-serif;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;cursor:pointer}
+nav.tabs button[aria-current="true"]{color:var(--blue)}
+nav.tabs svg{width:24px;height:24px}
+.badge{position:absolute;top:4px;left:calc(50% + 5px);background:var(--red);color:#fff;font:600 12px/18px 'Barlow',sans-serif;min-width:18px;height:18px;border-radius:9px;padding:0 5px}
+svg.i{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Buttons & inputs */
+.btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 15px 'Barlow',sans-serif;padding:9px 14px;border-radius:8px;min-height:44px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--blue-ink)}
+.btn.good{background:var(--green);border-color:var(--green);color:#fff}
+.btn.sm{min-height:38px;padding:6px 12px;font-size:14px}
+.btn.danger{color:var(--red);border-color:var(--red);background:transparent}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px}
+label.f{display:block;margin-bottom:12px;font-size:14px;font-weight:500;color:var(--muted)}
+input,select,textarea{display:block;width:100%;margin-top:4px;font:16px 'Barlow',sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:44px}
+textarea{min-height:96px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* Sections */
+.sec{margin-bottom:26px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.sec-head h2{font-size:24px;font-weight:700}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:22px 18px}
+.empty h2{font-size:24px;margin-bottom:6px}
+.empty p{color:var(--muted);margin-bottom:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--muted)}
+
+/* One-call groups: marking-flag strip + countdown */
+.grp{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.grp-head{display:grid;grid-template-columns:10px 1fr auto;gap:12px;padding:14px 14px 10px 0;align-items:center}
+.flag{align-self:stretch;background:var(--green);border-radius:0 3px 3px 0}
+.s-due .flag{background:var(--yellow)}
+.s-expired .flag{background:var(--red)}
+.grp-head h3{font-size:24px;font-weight:700;letter-spacing:.01em}
+.count{font:700 46px/.85 'Barlow Condensed',sans-serif;text-align:right;color:var(--green);min-width:64px}
+.count small{display:block;font:500 13px/1.3 'Barlow',sans-serif;color:var(--muted);margin-top:4px}
+.s-due .count{color:var(--yellow-ink)}
+.s-expired .count{color:var(--red)}
+.status{font-weight:600;font-size:14px;display:inline-block;padding:1px 8px;border-radius:4px;margin:3px 0}
+.s-ok .status{background:var(--green-bg);color:var(--green)}
+.s-due .status{background:var(--yellow-bg);color:var(--yellow-ink)}
+.s-expired .status{background:var(--red-bg);color:var(--red)}
+.grp-acts{display:flex;gap:8px;padding:0 14px 12px 22px;flex-wrap:wrap}
+.tk{display:grid;grid-template-columns:1fr auto;gap:0 10px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 14px 10px 22px;color:var(--ink);font:inherit;cursor:pointer}
+.tk-title{font-weight:600}
+.tk-num{font:600 19px 'Barlow Condensed',sans-serif;letter-spacing:.03em;text-align:right}
+
+/* Today rows */
+.trow{display:grid;grid-template-columns:8px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px 10px 0;margin-bottom:8px;color:var(--ink);font:inherit;cursor:pointer;overflow:hidden}
+.trow .count{font-size:36px;min-width:48px}
+
+/* Lists */
+.row{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.row.is-done{opacity:.6}
+.row-main{display:block;width:100%;text-align:left;background:none;border:0;padding:0;color:var(--ink);font:inherit;cursor:pointer}
+.row-main strong{font-size:17px}
+.row .btn-row{margin-top:10px}
+.pill{display:inline-block;font-size:13px;font-weight:600;padding:1px 8px;border-radius:4px;background:var(--bg);color:var(--muted);margin:2px 4px 2px 0}
+.pill.done,.pill.won,.pill.yes{background:var(--green-bg);color:var(--green)}
+.pill.late,.pill.lost{background:var(--red-bg);color:var(--red)}
+.pill.quoted,.pill.stale{background:var(--yellow-bg);color:var(--yellow-ink)}
+.pill.lead{background:var(--blue-bg);color:var(--blue)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 13px;font:500 14px 'Barlow',sans-serif;white-space:nowrap;min-height:36px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.prog{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:8px 0 12px}
+.prog i{display:block;height:100%;background:var(--green)}
+.big-num{font:700 40px/1 'Barlow Condensed',sans-serif}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.log{border-top:1px solid var(--line);margin-top:12px;padding-top:8px}
+.log p{padding:6px 0;border-bottom:1px solid var(--line);font-size:15px}
+.day-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 8px}
+.day-h h2{font-size:22px}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(8,14,20,.5);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:640px;max-height:92%;overflow:auto;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));animation:up .18s ease-out}
+.sheet h2{font-size:26px;margin-bottom:12px}
+.sheet h3{font-size:20px;margin:16px 0 8px}
+.sheet-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.sheet-acts .spacer{flex:1}
+@keyframes up{from{transform:translateY(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.sheet{animation:none}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(80px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:40;font-weight:500;max-width:92%;text-align:center}
+
+/* Login */
+.login{max-width:380px;margin:0 auto;padding:calc(60px + env(safe-area-inset-top,0px)) 20px 40px}
+.login h1{font-size:44px;font-weight:700;margin:6px 0 20px}
+.err{color:var(--red);font-weight:500;margin:8px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="sheet-root"></div>
+<div id="toast-root"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ============================================================
+   PASTE YOUR FIREBASE CONFIG HERE
+   (Firebase console > Project settings > Your apps > Config)
+   Use the same config as your time clock app.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_AUTH_DOMAIN",
+  projectId: "PASTE_PROJECT_ID",
+  storageBucket: "PASTE_STORAGE_BUCKET",
+  messagingSenderId: "PASTE_SENDER_ID",
+  appId: "PASTE_APP_ID"
+};
+
+const ROOT = "salesHub"; // all data lives under salesHub/{your user id}/...
+const DAY = 864e5;
+const DEFAULT_TEMPLATES = {
+  checkin: "Hey {first}, it's {me} with M&E Hydrovac. Do you need a hydrovac, vac truck, or roll-off for tomorrow?",
+  intro: "Hi {first}, this is {me} with M&E Hydrovac and Oilfield Services in Midland. We run hydrovac excavation, vac trucks, and roll-offs (open tops and vac boxes). Can I send you our rates?",
+  quote: "Hi {first}, it's {me} with M&E. Checking in on the quote I sent for {service}. Any questions I can answer, or are you ready to get it on the schedule?",
+  thanks: "Thanks for the work today, {first}. If you need anything else this week, just text me. {me}, M&E Hydrovac"
+};
+const TEMPLATE_NAMES = { checkin: "Daily check-in", intro: "Intro to a new customer", quote: "Quote follow-up", thanks: "Thank you after a job" };
+const DEFAULT_SETTINGS = { myName: "", templates: { ...DEFAULT_TEMPLATES }, validDays: 14, warnDays: 4, staleDays: 14 };
+const SERVICES = ["Hydrovac excavation","Vacuum truck","Roll-off (open top)","Vacuum box","Other"];
+const STAGES = { lead:"Lead", quoted:"Quoted", won:"Won", lost:"Lost" };
+const FREQ = { daily:"Daily", weekly:"Weekly", occasional:"Occasional" };
+const TITLES = { today:"Today", onecalls:"One-calls", customers:"Customers", jobs:"Jobs", sales:"Sales" };
+
+const configured = !String(firebaseConfig.apiKey).startsWith("PASTE");
+let app, auth, db;
+if (configured) {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  // Offline mode: the app keeps working with bad signal and syncs when you're back in service.
+  try { db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) }); }
+  catch { db = getFirestore(app); }
+}
+
+const S = {
+  user: null, tab: "today",
+  onecalls: [], customers: [], deals: [], jobs: [],
+  settings: { ...DEFAULT_SETTINGS },
+  loaded: {},
+  custFilter: "due", custSearch: "", dealFilter: "open"
+};
+let unsubs = [];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const pad = n => String(n).padStart(2, "0");
+const ymd = ms => { const d = new Date(ms); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; };
+const todayStr = () => ymd(Date.now());
+const addDaysStr = n => { const d = new Date(); d.setDate(d.getDate() + n); return ymd(d); };
+const parseYmd = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+const startOfDay = ms => { const d = new Date(ms); d.setHours(0,0,0,0); return d.getTime(); };
+const daysAgo = ms => Math.round((startOfDay(Date.now()) - startOfDay(ms)) / DAY);
+const fmtDate = ms => new Date(ms).toLocaleDateString("en-US", { month:"numeric", day:"numeric", year:"2-digit" });
+const fmtDT = ms => new Date(ms).toLocaleString("en-US", { month:"numeric", day:"numeric", hour:"numeric", minute:"2-digit" });
+const fmtTime = ms => new Date(ms).toLocaleTimeString("en-US", { hour:"numeric", minute:"2-digit" });
+const fmtYmd = s => { if (!s) return ""; const [y,m,d] = s.split("-"); return `${+m}/${+d}/${y.slice(2)}`; };
+const dayLabel = s => s === todayStr() ? "Today" : s === addDaysStr(1) ? "Tomorrow" : parseYmd(s).toLocaleDateString("en-US", { weekday:"long", month:"numeric", day:"numeric" });
+const toLocalInput = ms => { const d = new Date(ms); return `${ymd(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fromLocalInput = s => { const t = new Date(s).getTime(); return isNaN(t) ? null : t; };
+const money = n => (Number(n) || 0).toLocaleString("en-US", { style:"currency", currency:"USD", maximumFractionDigits:0 });
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const col = name => collection(db, ROOT, S.user.uid, name);
+const dref = (name, id) => doc(db, ROOT, S.user.uid, name, id);
+const val = id => (document.getElementById(id)?.value ?? "").trim();
+const digits = p => String(p || "").replace(/[^\d+]/g, "");
+// Writes are not awaited, so saving works instantly even with no signal. Errors still show.
+const save = p => { p.catch(showErr); };
+
+function toast(msg, ms = 3200) {
+  const r = $("#toast-root");
+  r.innerHTML = `<div class="toast" role="status">${esc(msg)}</div>`;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (r.innerHTML = ""), ms);
+}
+function showErr(err) {
+  console.error(err);
+  toast(err?.code === "permission-denied"
+    ? "Firebase blocked that. Check your Firestore rules."
+    : `Something went wrong: ${err?.message || err}`, 5000);
+}
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = document.createElement("a");
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 8000);
+}
+async function copyText(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch { prompt("Copy this:", text); }
+}
+function smsHref(phone, body) {
+  const sep = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) ? "&" : "?";
+  return `sms:${digits(phone)}${sep}body=${encodeURIComponent(body)}`;
+}
+function fillTemplate(key, ctx = {}) {
+  const t = S.settings.templates?.[key] || DEFAULT_TEMPLATES[key] || "";
+  const first = String(ctx.name || "").trim().split(/\s+/)[0] || "there";
+  return t.replaceAll("{first}", first)
+    .replaceAll("{company}", ctx.company || "your crew")
+    .replaceAll("{service}", (ctx.service || "the work").toLowerCase())
+    .replaceAll("{me}", S.settings.myName || "M&E");
+}
+
+const I = {
+  today: '<svg class="i" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+  onecalls: '<svg class="i" viewBox="0 0 24 24"><path d="M6 21V4M6 4h11l-2.5 4L17 12H6"/></svg>',
+  customers: '<svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-6 4z"/></svg>',
+  jobs: '<svg class="i" viewBox="0 0 24 24"><path d="M2 6h12v10H2zM14 9h4l4 4v3h-8"/><circle cx="6" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/></svg>',
+  sales: '<svg class="i" viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-8M15 7h5v5"/></svg>',
+  gear: '<svg class="i" viewBox="0 0 24 24" width="24" height="24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>'
+};
+
+/* ---------- one-call logic ---------- */
+function ocInfo(o) {
+  const exp = (o.updatedAt || 0) + S.settings.validDays * DAY;
+  const warn = exp - S.settings.warnDays * DAY;
+  const now = Date.now();
+  const daysLeft = Math.round((startOfDay(exp) - startOfDay(now)) / DAY);
+  const status = now >= exp ? "expired" : now >= warn ? "due" : "ok";
+  return { exp, warn, daysLeft, status };
+}
+function groupOC() {
+  const rank = { expired:0, due:1, ok:2 };
+  const m = new Map();
+  for (const o of S.onecalls) {
+    const k = (o.group || "Ungrouped").trim();
+    if (!m.has(k)) m.set(k, []);
+    m.get(k).push(o);
+  }
+  return [...m].map(([name, items]) => {
+    const infos = items.map(ocInfo);
+    const exp = Math.min(...infos.map(i => i.exp));
+    const status = infos.reduce((a, i) => rank[i.status] < rank[a] ? i.status : a, "ok");
+    const daysLeft = Math.min(...infos.map(i => i.daysLeft));
+    items.sort((a, b) => (a.sort ?? 999) - (b.sort ?? 999) || String(a.name || a.meNum || "").localeCompare(String(b.name || b.meNum || "")));
+    return { name, items, exp, warn: exp - S.settings.warnDays * DAY, status, daysLeft };
+  }).sort((a, b) => a.exp - b.exp || a.name.localeCompare(b.name));
+}
+function countHTML(g) {
+  if (g.exp <= Date.now()) {
+    const over = Math.max(0, -g.daysLeft);
+    return `<div class="count">${over}<small>${over === 0 ? "expired today" : over === 1 ? "day expired" : "days expired"}</small></div>`;
+  }
+  if (g.daysLeft === 0) return `<div class="count">0<small>expires today</small></div>`;
+  return `<div class="count">${g.daysLeft}<small>${g.daysLeft === 1 ? "day left" : "days left"}</small></div>`;
+}
+function statusText(g) {
+  if (g.status === "expired") return "Expired, update right away";
+  if (g.status === "due") return "Time to update";
+  return `Update on ${fmtDate(g.warn)}`;
+}
+const ocTitle = o => o.name || (o.meNum ? `M&E ${o.meNum}` : "Ticket");
+
+/* ---------- customer logic ---------- */
+const textedToday = c => c.lastTexted && ymd(c.lastTexted) === todayStr();
+const respToday = c => c.respDate === todayStr() ? c.resp : null;
+function isDue(c) {
+  if (textedToday(c)) return false;
+  const age = c.lastTexted ? daysAgo(c.lastTexted) : 9999;
+  const f = c.freq || "daily";
+  return f === "daily" ? true : f === "weekly" ? age >= 7 : age >= 30;
+}
+const custName = c => c.company || c.name || "Unnamed customer";
+function textCustomer(c, key = "checkin") {
+  if (!digits(c.phone)) { toast("Add a phone number for this customer first."); return; }
+  if (key === "checkin") save(updateDoc(dref("customers", c.id), { lastTexted: Date.now() }));
+  location.href = smsHref(c.phone, fillTemplate(key, c));
+}
+
+/* ---------- deal logic ---------- */
+const isOpen = d => d.stage === "lead" || d.stage === "quoted" || !d.stage;
+const fuLate = d => isOpen(d) && d.followUp && d.followUp <= todayStr();
+const lastContact = d => Math.max(d.createdAt || 0, ...(d.log || []).map(l => l.t || 0));
+const isStale = d => isOpen(d) && daysAgo(lastContact(d)) >= (S.settings.staleDays || 14);
+
+/* ---------- boot ---------- */
+if (!configured) {
+  $("#app").innerHTML = `<div class="login"><div class="brand">M&amp;E Hydrovac and Oilfield Services</div><h1>Almost ready</h1>
+  <div class="note">Open <strong>index.html</strong> and paste your Firebase config into the block near the top that says <em>PASTE YOUR FIREBASE CONFIG HERE</em>. Then commit the file and reload this page.</div></div>`;
+} else {
+  onAuthStateChanged(auth, u => {
+    S.user = u;
+    unsubs.forEach(f => f()); unsubs = []; S.loaded = {};
+    if (!u) { renderLogin(); return; }
+    renderShell(); listen(); render();
+  });
+}
+
+function listen() {
+  for (const k of ["onecalls","customers","deals","jobs"]) {
+    unsubs.push(onSnapshot(col(k), snap => {
+      S[k] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      S.loaded[k] = true; render();
+    }, showErr));
+  }
+  unsubs.push(onSnapshot(doc(db, ROOT, S.user.uid, "meta", "settings"), d => {
+    const saved = d.exists() ? d.data() : {};
+    const templates = { ...DEFAULT_TEMPLATES, ...(saved.templates || {}) };
+    if (saved.template && !saved.templates?.checkin) templates.checkin = saved.template; // older version
+    S.settings = { ...DEFAULT_SETTINGS, ...saved, templates };
+    render();
+  }, showErr));
+}
+
+function renderLogin() {
+  $("#sheet-root").innerHTML = "";
+  $("#app").innerHTML = `<div class="login">
+    <div class="brand">M&amp;E Hydrovac and Oilfield Services</div>
+    <h1>Sales Hub</h1>
+    <label class="f">Email<input id="lg-email" type="email" autocomplete="username"></label>
+    <label class="f">Password<input id="lg-pw" type="password" autocomplete="current-password"></label>
+    <div id="lg-err" class="err" role="alert"></div>
+    <button class="btn primary wide" data-act="login">Sign in</button>
+  </div>`;
+  $("#lg-pw").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+}
+async function doLogin() {
+  const err = $("#lg-err"); err.textContent = "";
+  try { await signInWithEmailAndPassword(auth, val("lg-email"), $("#lg-pw").value); }
+  catch (e) {
+    err.textContent = ["auth/invalid-credential","auth/wrong-password","auth/user-not-found","auth/invalid-email"].includes(e.code)
+      ? "Email or password is wrong." : `Couldn't sign in: ${e.message}`;
+  }
+}
+
+function renderShell() {
+  $("#app").innerHTML = `
+  <header class="top">
+    <div><div class="brand">M&amp;E Sales Hub</div><h1 id="title">Today</h1></div>
+    <button class="icon-btn" data-act="settings" aria-label="Settings">${I.gear}</button>
+  </header>
+  <div id="offline" class="offline" hidden>No signal. Your changes are saved on this phone and will sync when you're back in service.</div>
+  <main id="main"></main>
+  <nav class="tabs" aria-label="Sections">
+    ${Object.keys(TITLES).map(t => `<button data-act="tab" data-tab="${t}" aria-current="${S.tab === t}">${I[t]}<span>${TITLES[t]}</span><span class="badge" id="b-${t}" hidden></span></button>`).join("")}
+  </nav>`;
+  updateOnline();
+}
+function updateOnline() { const o = $("#offline"); if (o) o.hidden = navigator.onLine; }
+addEventListener("online", updateOnline);
+addEventListener("offline", updateOnline);
+
+function render() {
+  if (!S.user || !$("#main")) return;
+  const a = document.activeElement, aid = a && a.id;
+  const sel = aid && typeof a.selectionStart === "number" ? [a.selectionStart, a.selectionEnd] : null;
+  const views = { today: viewToday, onecalls: viewOnecalls, customers: viewCustomers, jobs: viewJobs, sales: viewSales };
+  $("#title").textContent = TITLES[S.tab];
+  $("#main").innerHTML = views[S.tab]();
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-current", String(b.dataset.tab === S.tab)));
+  const badges = {
+    onecalls: groupOC().filter(g => g.status !== "ok").length,
+    customers: S.customers.filter(isDue).length,
+    jobs: S.jobs.filter(j => j.date === todayStr() && !j.done).length,
+    sales: S.deals.filter(fuLate).length
+  };
+  for (const [k, n] of Object.entries(badges)) {
+    const b = $("#b-" + k); if (!b) continue;
+    b.hidden = !n; b.textContent = n > 99 ? "99+" : n;
+  }
+  if (aid && $("#main").contains(document.getElementById(aid))) {
+    const el = document.getElementById(aid); el.focus();
+    if (sel) try { el.setSelectionRange(...sel); } catch {}
+  }
+}
+const loading = () => `<p class="muted">Loading…</p>`;
+
+/* ---------- TODAY ---------- */
+function viewToday() {
+  const dateLine = new Date().toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric" });
+  const groups = groupOC();
+  const hot = groups.filter(g => g.status !== "ok");
+  const next = groups.find(g => g.status === "ok");
+  const fu = S.deals.filter(fuLate).sort((a, b) => a.followUp.localeCompare(b.followUp));
+  const stale = S.deals.filter(d => isStale(d) && !fuLate(d)).length;
+  const due = S.customers.filter(isDue).length;
+  const texted = S.customers.filter(textedToday).length;
+  const yes = S.customers.filter(c => respToday(c) === "yes").length;
+  const jobsToday = S.jobs.filter(j => j.date === todayStr());
+  const jobsTom = S.jobs.filter(j => j.date === addDaysStr(1));
+
+  let h = `<p class="muted" style="margin-bottom:18px">${esc(dateLine)}</p>`;
+
+  h += `<section class="sec"><div class="sec-head"><h2>One-calls</h2><button class="btn sm" data-act="goto" data-tab="onecalls">See all</button></div>`;
+  if (!S.loaded.onecalls) h += loading();
+  else if (!groups.length) h += `<div class="note">No tickets yet. <a href="#" data-act="goto" data-tab="onecalls">Add your one-calls</a>.</div>`;
+  else if (!hot.length) h += `<div class="note">Every one-call is current.${next ? ` Next update: ${esc(next.name)} on ${fmtDate(next.warn)}.` : ""}</div>`;
+  else h += hot.map(g => `<button class="trow s-${g.status}" data-act="goto" data-tab="onecalls">
+      <span class="flag"></span>
+      <span><strong>${esc(g.name)}</strong><span class="meta">${plural(g.items.length,"ticket","tickets")}. Expires ${fmtDT(g.exp)}</span></span>
+      ${countHTML(g)}</button>`).join("");
+  h += `</section>`;
+
+  h += `<section class="sec"><div class="sec-head"><h2>Check-in texts</h2></div>`;
+  if (!S.loaded.customers) h += loading();
+  else if (!S.customers.length) h += `<div class="note">Add your customers to start daily check-ins. <a href="#" data-act="goto" data-tab="customers">Go to customers</a>.</div>`;
+  else {
+    const total = due + texted, pct = total ? Math.round(texted / total * 100) : 100;
+    h += `<div class="row"><div class="big-num">${due}</div><span class="meta">${due === 1 ? "customer still needs" : "customers still need"} a text today. ${texted} texted so far${yes ? `, ${yes} need service` : ""}.</span>
+      <div class="prog"><i style="width:${pct}%"></i></div>
+      <div class="btn-row">
+        <button class="btn primary" data-act="goto" data-tab="customers" data-filter="due" ${due ? "" : "disabled"}>Start texting</button>
+        ${yes ? `<button class="btn" data-act="goto" data-tab="customers" data-filter="yes">See who needs service</button>` : ""}
+      </div></div>`;
+  }
+  h += `</section>`;
+
+  h += `<section class="sec"><div class="sec-head"><h2>Jobs</h2><button class="btn sm" data-act="job-new">Book a job</button></div>`;
+  if (!S.loaded.jobs) h += loading();
+  else if (!jobsToday.length && !jobsTom.length) h += `<div class="note">No jobs booked for today or tomorrow.</div>`;
+  else {
+    if (jobsToday.length) h += `<p class="muted" style="margin:4px 0 6px">Today</p>` + jobsToday.map(jobRow).join("");
+    if (jobsTom.length) h += `<p class="muted" style="margin:10px 0 6px">Tomorrow</p>` + jobsTom.map(jobRow).join("");
+  }
+  h += `</section>`;
+
+  h += `<section class="sec"><div class="sec-head"><h2>Follow-ups due</h2><button class="btn sm" data-act="deal-new">New lead</button></div>`;
+  if (!S.loaded.deals) h += loading();
+  else if (!fu.length) h += `<div class="note">No follow-ups due today.${stale ? ` ${plural(stale, "lead hasn't", "leads haven't")} heard from you in a while. <a href="#" data-act="goto" data-tab="sales">Take a look</a>.` : ""}</div>`;
+  else h += fu.map(dealRow).join("");
+  h += `</section>`;
+  return h;
+}
+
+/* ---------- ONE-CALLS ---------- */
+function viewOnecalls() {
+  if (!S.loaded.onecalls) return loading();
+  const groups = groupOC();
+  if (!groups.length) return `<div class="empty"><h2>No one-call tickets yet</h2>
+    <p>Load the 22 tickets you updated on 9/16/26 at 5 PM, or add one yourself.</p>
+    <div class="btn-row"><button class="btn primary" data-act="oc-seed">Load my 22 tickets</button><button class="btn" data-act="oc-new">Add a ticket</button></div></div>`;
+  return `<div class="bar"><p class="muted">${plural(S.onecalls.length,"ticket","tickets")} in ${plural(groups.length,"group","groups")}. Good for ${S.settings.validDays} days, flagged ${S.settings.warnDays} days before.</p>
+    <button class="btn primary sm" data-act="oc-new">Add ticket</button></div>` + groups.map(groupHTML).join("");
+}
+function groupHTML(g) {
+  return `<section class="grp s-${g.status}">
+    <div class="grp-head"><span class="flag"></span>
+      <div><h3>${esc(g.name)}</h3><span class="status">${statusText(g)}</span>
+      <span class="meta">${plural(g.items.length,"ticket","tickets")}. Expires ${fmtDT(g.exp)}</span></div>
+      ${countHTML(g)}</div>
+    <div class="grp-acts">
+      <button class="btn sm primary" data-act="oc-group-update" data-g="${esc(g.name)}">Mark updated</button>
+      <button class="btn sm" data-act="oc-copy" data-g="${esc(g.name)}">Copy tickets</button>
+      <button class="btn sm" data-act="oc-ics" data-g="${esc(g.name)}">Add to calendar</button>
+    </div>
+    ${g.items.map(o => {
+      const sub = [o.name && o.meNum ? `M&E ${o.meNum}` : "", o.gps || ""].filter(Boolean).join(", ");
+      return `<button class="tk" data-act="oc-edit" data-id="${o.id}">
+        <span class="tk-title">${esc(ocTitle(o))}</span><span class="tk-num">#${esc(o.ticket || "none")}</span>
+        <span class="meta">${esc(sub)}</span><span class="meta">Updated ${fmtDate(o.updatedAt)}</span></button>`;
+    }).join("")}
+  </section>`;
+}
+function sheetOC(o = {}) {
+  const groups = [...new Set(S.onecalls.map(x => x.group).filter(Boolean))];
+  const gps = (o.gps || "").replace(/\s+/g, "");
+  openSheet(`<h2>${o.id ? "Edit ticket" : "Add ticket"}</h2>
+    <label class="f">Group (customer or lease)<input id="oc-group" list="oc-groups" value="${esc(o.group || "")}" placeholder="PRO TORQUE"></label>
+    <datalist id="oc-groups">${groups.map(g => `<option value="${esc(g)}">`).join("")}</datalist>
+    <label class="f">Lease or location name<input id="oc-name" value="${esc(o.name || "")}" placeholder="SHACK 38-40B"></label>
+    <label class="f">GPS<input id="oc-gps" value="${esc(o.gps || "")}" placeholder="32.264103, -101.967392"></label>
+    ${gps ? `<p style="margin:-6px 0 12px"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gps)}" target="_blank" rel="noopener">Open in Maps</a></p>` : ""}
+    <div class="two">
+      <label class="f">M&amp;E one-call #<input id="oc-me" value="${esc(o.meNum || "")}" inputmode="tel"></label>
+      <label class="f">Current ticket #<input id="oc-ticket" value="${esc(o.ticket || "")}" inputmode="numeric"></label>
+    </div>
+    <label class="f">Last updated<input id="oc-when" type="datetime-local" value="${toLocalInput(o.updatedAt || Date.now())}"></label>
+    ${o.history?.length ? `<h3>Past tickets</h3><div class="log">${o.history.slice().reverse().map(h => `<p>#${esc(h.ticket)} <span class="muted">updated ${fmtDate(h.updatedAt)}</span></p>`).join("")}</div>` : ""}
+    <div class="sheet-acts">
+      ${o.id ? `<button class="btn danger" data-act="oc-del" data-id="${o.id}">Delete</button><span class="spacer"></span>` : ""}
+      <button class="btn" data-act="close">Cancel</button>
+      <button class="btn primary" data-act="oc-save" data-id="${o.id || ""}">Save</button>
+    </div>`);
+}
+function saveOC(id) {
+  const data = {
+    group: val("oc-group").toUpperCase() || "UNGROUPED", name: val("oc-name"), gps: val("oc-gps"),
+    meNum: val("oc-me"), ticket: val("oc-ticket"), updatedAt: fromLocalInput(val("oc-when")) || Date.now()
+  };
+  if (id) {
+    const old = S.onecalls.find(o => o.id === id);
+    if (old && old.ticket && old.ticket !== data.ticket) data.history = [...(old.history || []), { ticket: old.ticket, updatedAt: old.updatedAt }].slice(-12);
+    save(updateDoc(dref("onecalls", id), data));
+  } else {
+    save(addDoc(col("onecalls"), { ...data, history: [], createdAt: Date.now() }));
+  }
+  closeSheet(); toast("Ticket saved.");
+}
+function sheetGroupUpdate(gname) {
+  const g = groupOC().find(x => x.name === gname); if (!g) return;
+  openSheet(`<h2>Mark ${esc(gname)} updated</h2>
+    <p class="muted" style="margin-bottom:12px">Type the new ticket number for each one. Leave a box blank to keep the current number.</p>
+    <label class="f">Updated on<input id="gu-when" type="datetime-local" value="${toLocalInput(Date.now())}"></label>
+    ${g.items.map(o => `<label class="f">${esc(ocTitle(o))} (now #${esc(o.ticket || "none")})
+      <input data-oc="${o.id}" inputmode="numeric" placeholder="New ticket #"></label>`).join("")}
+    <div class="sheet-acts"><button class="btn" data-act="close">Cancel</button>
+    <button class="btn primary" data-act="gu-save" data-g="${esc(gname)}">Save</button></div>`);
+}
+function saveGroupUpdate(gname) {
+  const when = fromLocalInput(val("gu-when")) || Date.now();
+  const items = S.onecalls.filter(o => (o.group || "Ungrouped").trim() === gname);
+  const b = writeBatch(db);
+  for (const o of items) {
+    const nt = (document.querySelector(`[data-oc="${o.id}"]`)?.value || "").trim();
+    b.update(dref("onecalls", o.id), {
+      ticket: nt || o.ticket || "", updatedAt: when,
+      history: [...(o.history || []), { ticket: o.ticket || "", updatedAt: o.updatedAt || 0 }].slice(-12)
+    });
+  }
+  save(b.commit());
+  closeSheet();
+  toast(`${gname} updated. Next update due ${fmtDate(when + (S.settings.validDays - S.settings.warnDays) * DAY)}.`, 4500);
+}
+function copyGroup(gname) {
+  const g = groupOC().find(x => x.name === gname); if (!g) return;
+  const text = `${gname} one-calls (expire ${fmtDate(g.exp)})\n` + g.items.map(o =>
+    [ocTitle(o), `#${o.ticket || "none"}`, o.gps ? `GPS ${o.gps}` : ""].filter(Boolean).join("  ")).join("\n");
+  copyText(text, "Tickets copied.");
+}
+function groupICS(gname) {
+  const g = groupOC().find(x => x.name === gname); if (!g) return;
+  const d = new Date(g.warn); d.setHours(8, 0, 0, 0);
+  if (d.getTime() < Date.now()) { toast("The reminder date already passed. Update these now."); return; }
+  const stamp = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+  const end = new Date(d.getTime() + 30 * 60000);
+  const u = new Date();
+  const utc = `${u.getUTCFullYear()}${pad(u.getUTCMonth()+1)}${pad(u.getUTCDate())}T${pad(u.getUTCHours())}${pad(u.getUTCMinutes())}00Z`;
+  const icsText = s => String(s).replace(/\\/g, "\\\\").replace(/[,;]/g, m => "\\" + m).replace(/\n/g, "\\n");
+  const desc = `Expires ${fmtDT(g.exp)}\n` + g.items.map(o => `${ocTitle(o)}: #${o.ticket}`).join("\n");
+  const ics = [
+    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//M&E Sales Hub//EN","BEGIN:VEVENT",
+    `UID:${Date.now()}-${Math.random().toString(36).slice(2)}@me-sales-hub`, `DTSTAMP:${utc}`,
+    `DTSTART:${stamp(d)}`, `DTEND:${stamp(end)}`,
+    `SUMMARY:${icsText("Update one-calls: " + gname)}`, `DESCRIPTION:${icsText(desc)}`,
+    "BEGIN:VALARM","TRIGGER:PT0M","ACTION:DISPLAY",`DESCRIPTION:${icsText("Update one-calls: " + gname)}`,"END:VALARM",
+    "END:VEVENT","END:VCALENDAR"
+  ].join("\r\n");
+  download(`onecalls-${gname.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.ics`, ics, "text/calendar");
+}
+function seedTickets() {
+  const when = new Date(2026, 8, 16, 17, 0).getTime();
+  const pt = [
+    ["32.264103, -101.967392","267-517-5794","2675907389"],
+    ["32.264325, -101.966643","267-517-5882","2675907414"],
+    ["32.264189, -101.967002","267-517-5936","2675907424"],
+    ["32.267243, -101.971964","267-517-6005","2675907444"],
+    ["32.266943, -101.977639","267-517-6091","2675907466"],
+    ["32.267897, -101.972190","267-517-6218","2675907481"],
+    ["32.271411, -101.968968","267-517-6312","2675907493"],
+    ["32.277901, -101.974923","267-517-6384","2675907502"],
+    ["32.255200, -101.972972","267-517-6449","2675907510"],
+    ["32.273612, -101.944539","267-517-6470","2675907524"],
+    ["32.240757, -101.968011","267-517-6540","2675907535"]
+  ];
+  const named = [
+    ["GERMANIA","GERMANIA 36-44A","2675907575"],["GERMANIA","GERMANIA 36-39A","2676017983"],["GERMANIA","GERMANIA 36-46C","2676018062"],
+    ["SHACK","SHACK 37-42A","2676018136"],["SHACK","SHACK 38-40B","2676018166"],["SHACK","SHACK 38-12A","2676018194"],
+    ["CHIEF CF ENTERPRISE STATION","CHIEF CF ENTERPRISE STATION","2676018237"],
+    ["TT 38-16A","TT 38-16A","2676018287"],
+    ["PEMBROOK D-23B","PEMBROOK D-23B","2676018383"],
+    ["WOODY","WOODY 36-31B","2676018461"],["WOODY","WOODY 36-31A","2676019604"]
+  ];
+  const b = writeBatch(db);
+  pt.forEach(([gps, me, t], i) => b.set(doc(col("onecalls")), { group:"PRO TORQUE", name:"", gps, meNum:me, ticket:t, updatedAt:when, history:[], sort:i, createdAt:Date.now() }));
+  named.forEach(([g, n, t], i) => b.set(doc(col("onecalls")), { group:g, name:n, gps:"", meNum:"", ticket:t, updatedAt:when, history:[], sort:i, createdAt:Date.now() }));
+  save(b.commit());
+  toast("Loaded 22 tickets.");
+}
+
+/* ---------- CUSTOMERS ---------- */
+function custFiltered() {
+  const f = S.custFilter, q = S.custSearch.toLowerCase();
+  let list = S.customers.filter(c =>
+    f === "all" ? true : f === "due" ? isDue(c) : f === "texted" ? textedToday(c) : f === "yes" ? respToday(c) === "yes" : (c.freq || "daily") === f);
+  if (q) list = list.filter(c => [c.company, c.name, c.phone, c.notes].some(x => String(x || "").toLowerCase().includes(q)));
+  return list.sort((a, b) => custName(a).localeCompare(custName(b)));
+}
+function custListHTML() {
+  const list = custFiltered();
+  if (!list.length) return `<div class="note">${S.custFilter === "due" && S.customers.length ? "Everyone who needs a text today has one. Nice work." : "No customers match."}</div>`;
+  return list.map(c => {
+    const t = textedToday(c), r = respToday(c);
+    let acts;
+    if (!t) acts = `<button class="btn sm primary" data-act="cust-text" data-id="${c.id}">Text</button>`;
+    else if (!r) acts = `<button class="btn sm good" data-act="cust-yes" data-id="${c.id}">Needs service</button>
+      <button class="btn sm" data-act="cust-no" data-id="${c.id}">No service</button>`;
+    else acts = r === "yes" ? `<button class="btn sm" data-act="job-new" data-cust="${c.id}">Book a job</button>` : "";
+    return `<div class="row">
+      <button class="row-main" data-act="cust-edit" data-id="${c.id}">
+        <strong>${esc(custName(c))}</strong>
+        <span class="meta">${esc([c.company ? c.name : "", c.phone].filter(Boolean).join(", "))}</span>
+        <span class="meta"><span class="pill">${FREQ[c.freq || "daily"]}</span>${
+          r === "yes" ? `<span class="pill yes">Needs service</span>` :
+          r === "no" ? `<span class="pill">No service today</span>` :
+          t ? `<span class="pill done">Texted ${fmtTime(c.lastTexted)}</span>` :
+          c.lastTexted ? `Last texted ${fmtDate(c.lastTexted)}` : "Not texted yet"}</span>
+      </button>
+      <div class="btn-row">${acts}
+        ${c.phone ? `<a class="btn sm" href="tel:${esc(digits(c.phone))}">Call</a>` : ""}
+        ${t ? `<button class="btn sm" data-act="cust-untext" data-id="${c.id}">Undo</button>` : ""}
+      </div></div>`;
+  }).join("");
+}
+function viewCustomers() {
+  if (!S.loaded.customers) return loading();
+  if (!S.customers.length) return `<div class="empty"><h2>No customers yet</h2>
+    <p>Paste your list from Excel or Google Sheets, or add customers one at a time.</p>
+    <div class="btn-row"><button class="btn primary" data-act="cust-import">Import a list</button><button class="btn" data-act="cust-new">Add a customer</button></div></div>`;
+  const due = S.customers.filter(isDue).length, texted = S.customers.filter(textedToday).length;
+  const total = due + texted, pct = total ? Math.round(texted / total * 100) : 100;
+  const count = f => f === "all" ? S.customers.length : f === "due" ? due : f === "texted" ? texted
+    : f === "yes" ? S.customers.filter(c => respToday(c) === "yes").length : S.customers.filter(c => (c.freq || "daily") === f).length;
+  const chips = [["due","Due today"],["yes","Needs service"],["texted","Texted today"],["all","All"],["daily","Daily"],["weekly","Weekly"],["occasional","Occasional"]];
+  return `<div class="row" style="margin-bottom:14px">
+      <span class="meta">${texted} texted today, ${due} still due</span>
+      <div class="prog"><i style="width:${pct}%"></i></div>
+      <button class="btn primary wide" data-act="cust-next" ${due ? "" : "disabled"}>${due ? "Text next customer" : "All caught up for today"}</button>
+    </div>
+    <div class="chips" role="group" aria-label="Filter">${chips.map(([k, l]) => `<button class="chip" data-act="cust-filter" data-f="${k}" aria-pressed="${S.custFilter === k}">${l} (${count(k)})</button>`).join("")}</div>
+    <input id="cust-search" type="search" placeholder="Search customers" value="${esc(S.custSearch)}" style="margin-bottom:12px" aria-label="Search customers">
+    <div id="cust-list">${custListHTML()}</div>
+    <div class="btn-row" style="margin-top:14px"><button class="btn" data-act="cust-new">Add customer</button><button class="btn" data-act="cust-import">Import a list</button></div>`;
+}
+function sheetCust(c = {}) {
+  openSheet(`<h2>${c.id ? esc(custName(c)) : "Add customer"}</h2>
+    ${c.id && c.phone ? `<div class="btn-row" style="margin-bottom:12px">
+      <button class="btn sm" data-act="cust-tpl" data-key="intro" data-id="${c.id}">Send intro text</button>
+      <button class="btn sm" data-act="cust-tpl" data-key="thanks" data-id="${c.id}">Send thank-you</button></div>` : ""}
+    <label class="f">Company<input id="c-company" value="${esc(c.company || "")}"></label>
+    <label class="f">Contact name<input id="c-name" value="${esc(c.name || "")}"></label>
+    <label class="f">Cell phone<input id="c-phone" type="tel" value="${esc(c.phone || "")}"></label>
+    <label class="f">How often to check in<select id="c-freq">${Object.entries(FREQ).map(([k, l]) => `<option value="${k}" ${(c.freq || "daily") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+    <label class="f">Notes<textarea id="c-notes" placeholder="Leases, gate codes, who to ask for">${esc(c.notes || "")}</textarea></label>
+    ${c.id ? `<p class="muted" style="font-size:14px">Their check-in text: “${esc(fillTemplate("checkin", c))}”</p>` : ""}
+    <div class="sheet-acts">
+      ${c.id ? `<button class="btn danger" data-act="cust-del" data-id="${c.id}">Delete</button><span class="spacer"></span>` : ""}
+      <button class="btn" data-act="close">Cancel</button>
+      <button class="btn primary" data-act="cust-save" data-id="${c.id || ""}">Save</button>
+    </div>`);
+}
+function saveCust(id) {
+  const data = { company: val("c-company"), name: val("c-name"), phone: val("c-phone"), freq: val("c-freq") || "daily", notes: val("c-notes") };
+  if (!data.company && !data.name) { toast("Add a company or contact name."); return; }
+  if (id) save(updateDoc(dref("customers", id), data));
+  else save(addDoc(col("customers"), { ...data, lastTexted: 0, createdAt: Date.now() }));
+  closeSheet(); toast("Customer saved.");
+}
+function sheetImport() {
+  openSheet(`<h2>Import customers</h2>
+    <p class="muted" style="margin-bottom:12px">One customer per line: company, contact name, phone, and how often (daily, weekly, or occasional). You can paste columns straight from Excel or Google Sheets.</p>
+    <label class="f">Customer list<textarea id="imp-text" style="min-height:200px" placeholder="Pro Torque, John Smith, 432-555-0101, daily"></textarea></label>
+    <div class="sheet-acts"><button class="btn" data-act="close">Cancel</button><button class="btn primary" data-act="import-save">Import</button></div>`);
+}
+function doImport() {
+  const lines = val("imp-text").split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const have = new Set(S.customers.map(c => digits(c.phone)).filter(p => p.length >= 10));
+  const rows = []; let skipped = 0;
+  for (const line of lines) {
+    const parts = line.split(/\t|,/).map(p => p.trim()).filter(Boolean);
+    let phone = "", freq = "daily"; const rest = [];
+    for (const p of parts) {
+      if (!phone && p.replace(/\D/g, "").length >= 10) phone = p;
+      else if (/^(daily|weekly|occasional)$/i.test(p)) freq = p.toLowerCase();
+      else rest.push(p);
+    }
+    if (/^company$/i.test(rest[0] || "")) continue; // header row
+    if (!rest.length && !phone) continue;
+    if (phone && have.has(digits(phone))) { skipped++; continue; } // already in the list
+    if (phone) have.add(digits(phone));
+    rows.push({ company: rest[0] || "", name: rest[1] || "", phone, freq, notes: rest.slice(2).join(", "), lastTexted: 0, createdAt: Date.now() });
+  }
+  if (!rows.length) { toast(skipped ? "Those customers are already in your list." : "Nothing to import. Check the format."); return; }
+  for (let i = 0; i < rows.length; i += 400) {
+    const b = writeBatch(db);
+    rows.slice(i, i + 400).forEach(r => b.set(doc(col("customers")), r));
+    save(b.commit());
+  }
+  closeSheet(); toast(`Imported ${plural(rows.length, "customer", "customers")}${skipped ? `, skipped ${skipped} already in your list` : ""}.`, 4500);
+}
+function exportCSV() {
+  const q = s => `"${String(s ?? "").replace(/"/g, '""')}"`;
+  const lines = [["Company","Contact","Phone","Frequency","Notes","Last texted"].map(q).join(",")]
+    .concat(S.customers.map(c => [c.company, c.name, c.phone, c.freq || "daily", c.notes, c.lastTexted ? fmtDate(c.lastTexted) : ""].map(q).join(",")));
+  download(`me-customers-${todayStr()}.csv`, lines.join("\n"), "text/csv");
+}
+
+/* ---------- JOBS ---------- */
+function jobRow(j) {
+  return `<div class="row ${j.done ? "is-done" : ""}"><button class="row-main" data-act="job-edit" data-id="${j.id}">
+    <strong>${esc(j.customer || "Job")}</strong>
+    <span class="meta">${esc(j.service || "")}${j.location ? ` at ${esc(j.location)}` : ""}${j.time ? `, ${esc(j.time)}` : ""}</span>
+    ${j.notes ? `<span class="meta">${esc(j.notes)}</span>` : ""}</button>
+    <div class="btn-row"><button class="btn sm" data-act="job-done" data-id="${j.id}">${j.done ? "Mark not done" : "Mark done"}</button>
+    ${j.done ? `<span class="pill done">Done</span>` : ""}</div></div>`;
+}
+function viewJobs() {
+  if (!S.loaded.jobs) return loading();
+  const today = todayStr(), weekAgo = addDaysStr(-7);
+  const upcoming = S.jobs.filter(j => j.date >= today);
+  const missed = S.jobs.filter(j => j.date < today && j.date >= weekAgo && !j.done).sort((a, b) => a.date.localeCompare(b.date));
+  const byDate = {};
+  upcoming.forEach(j => (byDate[j.date] ||= []).push(j));
+  let h = `<button class="btn primary wide" data-act="job-new" style="margin-bottom:6px">Book a job</button>`;
+  if (!upcoming.length && !missed.length) return h + `<div class="note" style="margin-top:12px">No jobs booked. When a customer says they need service, tap Needs service and book it here.</div>`;
+  for (const date of Object.keys(byDate).sort()) {
+    const list = byDate[date].sort((a, b) => String(a.time || "").localeCompare(String(b.time || "")) || String(a.customer).localeCompare(String(b.customer)));
+    h += `<div class="day-h"><h2>${esc(dayLabel(date))} <span class="muted" style="font-size:16px">${plural(list.length, "job", "jobs")}</span></h2>
+      <button class="btn sm" data-act="jobs-copy" data-date="${date}">Copy list</button></div>` + list.map(jobRow).join("");
+  }
+  if (missed.length) h += `<div class="day-h"><h2>Not marked done</h2></div>` + missed.map(j => jobRow(j).replace("<strong>", `<span class="pill late">${fmtYmd(j.date)}</span><strong>`)).join("");
+  return h;
+}
+function copyJobs(date) {
+  const list = S.jobs.filter(j => j.date === date && !j.done).sort((a, b) => String(a.time || "").localeCompare(String(b.time || "")));
+  if (!list.length) { toast("No open jobs that day."); return; }
+  const text = `M&E jobs for ${dayLabel(date)} ${fmtYmd(date)}\n` + list.map((j, i) =>
+    `${i + 1}. ${j.customer}: ${j.service}${j.location ? ` at ${j.location}` : ""}${j.time ? `, ${j.time}` : ""}${j.notes ? ` (${j.notes})` : ""}`).join("\n");
+  copyText(text, "Job list copied. Paste it in a text to your crew.");
+}
+function sheetJob(j = {}) {
+  openSheet(`<h2>${j.id ? "Edit job" : "Book a job"}</h2>
+    <label class="f">Customer<input id="j-cust" list="j-custs" value="${esc(j.customer || "")}"></label>
+    <datalist id="j-custs">${S.customers.map(c => `<option value="${esc(custName(c))}">`).join("")}</datalist>
+    <div class="two">
+      <label class="f">Date<input id="j-date" type="date" value="${esc(j.date || addDaysStr(1))}"></label>
+      <label class="f">Start time<input id="j-time" value="${esc(j.time || "")}" placeholder="7:00 AM"></label>
+    </div>
+    <label class="f">Service<select id="j-service">${SERVICES.map(s => `<option ${j.service === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+    <label class="f">Lease or location<input id="j-loc" value="${esc(j.location || "")}"></label>
+    <label class="f">Notes<textarea id="j-notes" placeholder="Company man, gate code, what they need">${esc(j.notes || "")}</textarea></label>
+    <div class="sheet-acts">
+      ${j.id ? `<button class="btn danger" data-act="job-del" data-id="${j.id}">Delete</button><span class="spacer"></span>` : ""}
+      <button class="btn" data-act="close">Cancel</button>
+      <button class="btn primary" data-act="job-save" data-id="${j.id || ""}" data-cust="${esc(j.customerId || "")}">Save job</button>
+    </div>`);
+}
+function saveJob(id, custId) {
+  const data = { customer: val("j-cust"), customerId: custId || "", date: val("j-date") || addDaysStr(1), time: val("j-time"),
+    service: val("j-service"), location: val("j-loc"), notes: val("j-notes") };
+  if (!data.customer) { toast("Add the customer's name."); return; }
+  if (id) save(updateDoc(dref("jobs", id), data));
+  else save(addDoc(col("jobs"), { ...data, done: false, createdAt: Date.now() }));
+  closeSheet(); toast(`Job saved for ${fmtYmd(data.date)}.`);
+}
+
+/* ---------- SALES ---------- */
+function dealRow(d) {
+  const late = fuLate(d), stale = isStale(d);
+  return `<div class="row"><button class="row-main" data-act="deal-edit" data-id="${d.id}">
+    <strong>${esc(d.company || "Unnamed lead")}</strong>
+    <span class="meta">${esc([d.contact, d.service].filter(Boolean).join(", "))}</span>
+    <span class="meta" style="margin-top:4px"><span class="pill ${d.stage || "lead"}">${STAGES[d.stage || "lead"]}</span>${d.amount ? money(d.amount) + " " : ""}${
+      d.followUp && isOpen(d) ? `<span class="pill ${late ? "late" : ""}">Follow up ${fmtYmd(d.followUp)}</span>` : ""}${
+      stale ? `<span class="pill stale">No contact in ${daysAgo(lastContact(d))} days</span>` : ""}</span>
+  </button></div>`;
+}
+function viewSales() {
+  if (!S.loaded.deals) return loading();
+  const open = S.deals.filter(isOpen);
+  const quotedTotal = S.deals.filter(d => d.stage === "quoted").reduce((s, d) => s + (Number(d.amount) || 0), 0);
+  const month = todayStr().slice(0, 7);
+  const wonList = S.deals.filter(d => d.stage === "won" && (d.wonOn || "").startsWith(month));
+  const wonMonth = wonList.reduce((s, d) => s + (Number(d.amount) || 0), 0);
+  const closed = S.deals.filter(d => d.stage === "won" || d.stage === "lost");
+  const winRate = closed.length ? Math.round(S.deals.filter(d => d.stage === "won").length / closed.length * 100) : null;
+  const f = S.dealFilter;
+  const list = S.deals.filter(d => f === "all" ? true : f === "open" ? isOpen(d) : f === "stale" ? isStale(d) : (d.stage || "lead") === f)
+    .sort((a, b) => (a.followUp || "9999").localeCompare(b.followUp || "9999") || String(a.company || "").localeCompare(String(b.company || "")));
+  const chips = [["open","Open"],["stale","Gone quiet"],["lead","Leads"],["quoted","Quoted"],["won","Won"],["lost","Lost"],["all","All"]];
+  const n = k => k === "all" ? S.deals.length : k === "open" ? open.length : k === "stale" ? S.deals.filter(isStale).length : S.deals.filter(d => (d.stage || "lead") === k).length;
+  return `<div class="stats">
+      <div class="stat"><div class="big-num">${money(quotedTotal)}</div><span class="meta">Out on quotes</span></div>
+      <div class="stat"><div class="big-num">${money(wonMonth)}</div><span class="meta">Won this month${winRate !== null ? `, ${winRate}% win rate` : ""}</span></div>
+    </div>
+    <button class="btn primary wide" data-act="deal-new" style="margin-bottom:14px">New lead</button>
+    <div class="chips" role="group" aria-label="Filter">${chips.map(([k, l]) => `<button class="chip" data-act="deal-filter" data-f="${k}" aria-pressed="${f === k}">${l} (${n(k)})</button>`).join("")}</div>
+    ${list.length ? list.map(dealRow).join("") : `<div class="note">${S.deals.length ? "Nothing here." : "Add your first lead: a company you've quoted, called on, or want to win."}</div>`}`;
+}
+function sheetDeal(d = {}) {
+  const ph = digits(d.phone);
+  openSheet(`<h2>${d.id ? esc(d.company || "Lead") : "New lead"}</h2>
+    ${d.id && ph ? `<div class="btn-row" style="margin-bottom:12px">
+      <a class="btn sm" href="tel:${esc(ph)}">Call</a>
+      <button class="btn sm" data-act="deal-text" data-key="intro" data-id="${d.id}">Send intro</button>
+      <button class="btn sm" data-act="deal-text" data-key="quote" data-id="${d.id}">Quote follow-up</button>
+      <button class="btn sm" data-act="deal-text" data-key="thanks" data-id="${d.id}">Thank-you</button></div>` : ""}
+    <label class="f">Company<input id="d-company" value="${esc(d.company || "")}"></label>
+    <div class="two">
+      <label class="f">Contact<input id="d-contact" value="${esc(d.contact || "")}"></label>
+      <label class="f">Phone<input id="d-phone" type="tel" value="${esc(d.phone || "")}"></label>
+    </div>
+    <div class="two">
+      <label class="f">Service<select id="d-service">${SERVICES.map(s => `<option ${d.service === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+      <label class="f">Stage<select id="d-stage">${Object.entries(STAGES).map(([k, l]) => `<option value="${k}" ${(d.stage || "lead") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+    </div>
+    <div class="two">
+      <label class="f">Quote amount ($)<input id="d-amount" inputmode="decimal" value="${esc(d.amount || "")}"></label>
+      <label class="f">Follow up on<input id="d-fu" type="date" value="${esc(d.followUp || addDaysStr(2))}"></label>
+    </div>
+    <label class="f">Notes<textarea id="d-notes" placeholder="Who makes the call, current vendor, rates they pay">${esc(d.notes || "")}</textarea></label>
+    ${d.id ? `<h3>Log a call or visit</h3>
+      <label class="f">What happened<textarea id="d-log" placeholder="Talked to the company man, wants pricing on vac boxes"></textarea></label>
+      <div class="btn-row">
+        <button class="btn sm" data-act="deal-log" data-id="${d.id}" data-days="1">Log, follow up tomorrow</button>
+        <button class="btn sm" data-act="deal-log" data-id="${d.id}" data-days="3">In 3 days</button>
+        <button class="btn sm" data-act="deal-log" data-id="${d.id}" data-days="7">In a week</button>
+      </div>
+      ${d.log?.length ? `<div class="log">${d.log.slice().reverse().map(l => `<p><span class="muted">${fmtDate(l.t)}</span> ${esc(l.text)}</p>`).join("")}</div>` : ""}` : ""}
+    <div class="sheet-acts">
+      ${d.id ? `<button class="btn danger" data-act="deal-del" data-id="${d.id}">Delete</button><span class="spacer"></span>` : ""}
+      <button class="btn" data-act="close">Cancel</button>
+      <button class="btn primary" data-act="deal-save" data-id="${d.id || ""}">Save</button>
+    </div>`);
+}
+function collectDeal(old = {}) {
+  const stage = val("d-stage") || "lead";
+  const data = { company: val("d-company"), contact: val("d-contact"), phone: val("d-phone"), service: val("d-service"),
+    stage, amount: Number(val("d-amount").replace(/[^\d.]/g, "")) || 0, followUp: val("d-fu"), notes: val("d-notes") };
+  if (stage === "won" && old.stage !== "won") data.wonOn = todayStr();
+  return data;
+}
+function saveDeal(id) {
+  const old = S.deals.find(d => d.id === id) || {};
+  const data = collectDeal(old);
+  if (!data.company) { toast("Add the company name."); return; }
+  if (id) save(updateDoc(dref("deals", id), data));
+  else save(addDoc(col("deals"), { ...data, log: [], createdAt: Date.now() }));
+  closeSheet(); toast("Lead saved.");
+}
+function logDeal(id, days) {
+  const old = S.deals.find(d => d.id === id) || {};
+  const text = val("d-log");
+  const data = collectDeal(old);
+  data.followUp = addDaysStr(days);
+  data.log = [...(old.log || []), ...(text ? [{ t: Date.now(), text }] : [])].slice(-50);
+  save(updateDoc(dref("deals", id), data));
+  closeSheet(); toast(`Logged. Follow up ${fmtYmd(data.followUp)}.`);
+}
+function textDeal(id, key) {
+  const d = S.deals.find(x => x.id === id); if (!d || !digits(d.phone)) return;
+  const log = [...(d.log || []), { t: Date.now(), text: `Sent ${TEMPLATE_NAMES[key].toLowerCase()} text` }].slice(-50);
+  save(updateDoc(dref("deals", id), { log }));
+  location.href = smsHref(d.phone, fillTemplate(key, { name: d.contact, company: d.company, service: d.service }));
+}
+
+/* ---------- SETTINGS ---------- */
+function sheetSettings() {
+  const s = S.settings;
+  openSheet(`<h2>Settings</h2>
+    <label class="f">Your name (used in texts)<input id="s-me" value="${esc(s.myName)}"></label>
+    <h3>Text messages</h3>
+    <p class="muted" style="font-size:14px;margin-bottom:10px">{first} becomes the contact's first name, {company} the company, {service} the service, and {me} your name.</p>
+    ${Object.entries(TEMPLATE_NAMES).map(([k, l]) => `<label class="f">${l}<textarea id="s-t-${k}">${esc(s.templates[k])}</textarea></label>`).join("")}
+    <h3>Reminders</h3>
+    <div class="two">
+      <label class="f">One-calls good for (days)<input id="s-valid" type="number" min="1" value="${s.validDays}"></label>
+      <label class="f">Flag one-calls (days before)<input id="s-warn" type="number" min="0" value="${s.warnDays}"></label>
+    </div>
+    <label class="f">Flag a lead as gone quiet after (days)<input id="s-stale" type="number" min="1" value="${s.staleDays}"></label>
+    <h3>Your data</h3>
+    <div class="btn-row"><button class="btn sm" data-act="export">Back up everything</button><button class="btn sm" data-act="export-csv">Export customers (CSV)</button></div>
+    <div class="sheet-acts">
+      <button class="btn danger" data-act="signout">Sign out</button><span class="spacer"></span>
+      <button class="btn" data-act="close">Cancel</button>
+      <button class="btn primary" data-act="set-save">Save</button>
+    </div>`);
+}
+function saveSettings() {
+  const templates = {};
+  for (const k of Object.keys(TEMPLATE_NAMES)) templates[k] = val("s-t-" + k) || DEFAULT_TEMPLATES[k];
+  const data = { myName: val("s-me"), templates,
+    validDays: Math.max(1, parseInt(val("s-valid")) || 14), warnDays: Math.max(0, parseInt(val("s-warn")) || 0),
+    staleDays: Math.max(1, parseInt(val("s-stale")) || 14) };
+  save(setDoc(doc(db, ROOT, S.user.uid, "meta", "settings"), data, { merge: true }));
+  closeSheet(); toast("Settings saved.");
+}
+
+/* ---------- sheet ---------- */
+function openSheet(html) {
+  $("#sheet-root").innerHTML = `<div class="scrim" data-scrim><div class="sheet" role="dialog" aria-modal="true">${html}</div></div>`;
+  const first = $("#sheet-root input, #sheet-root textarea, #sheet-root select");
+  if (first && !matchMedia("(pointer:coarse)").matches) first.focus();
+}
+function closeSheet() { $("#sheet-root").innerHTML = ""; }
+
+/* ---------- events ---------- */
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+document.addEventListener("input", e => {
+  if (e.target.id === "cust-search") { S.custSearch = e.target.value; const l = $("#cust-list"); if (l) l.innerHTML = custListHTML(); }
+});
+document.addEventListener("click", async e => {
+  if (e.target.matches("[data-scrim]")) { closeSheet(); return; }
+  const t = e.target.closest("[data-act]"); if (!t) return;
+  const act = t.dataset.act, id = t.dataset.id;
+  if (t.tagName === "A") e.preventDefault();
+  const byId = (arr, x) => S[arr].find(o => o.id === x);
+  try {
+    switch (act) {
+      case "login": return doLogin();
+      case "tab": S.tab = t.dataset.tab; closeSheet(); render(); scrollTo(0, 0); return;
+      case "goto": S.tab = t.dataset.tab; if (t.dataset.filter) S.custFilter = t.dataset.filter; render(); scrollTo(0, 0); return;
+      case "close": return closeSheet();
+      case "settings": return sheetSettings();
+      case "set-save": return saveSettings();
+      case "signout": closeSheet(); return await signOut(auth);
+      case "export": return download(`me-sales-hub-backup-${todayStr()}.json`,
+        JSON.stringify({ onecalls: S.onecalls, customers: S.customers, deals: S.deals, jobs: S.jobs, settings: S.settings }, null, 2), "application/json");
+      case "export-csv": return exportCSV();
+
+      case "oc-new": return sheetOC();
+      case "oc-edit": return sheetOC(byId("onecalls", id));
+      case "oc-save": return saveOC(id);
+      case "oc-del": if (confirm("Delete this ticket?")) { save(deleteDoc(dref("onecalls", id))); closeSheet(); toast("Ticket deleted."); } return;
+      case "oc-seed": if (S.onecalls.length) return; t.disabled = true; return seedTickets();
+      case "oc-group-update": return sheetGroupUpdate(t.dataset.g);
+      case "gu-save": return saveGroupUpdate(t.dataset.g);
+      case "oc-copy": return copyGroup(t.dataset.g);
+      case "oc-ics": return groupICS(t.dataset.g);
+
+      case "cust-filter": S.custFilter = t.dataset.f; return render();
+      case "cust-new": return sheetCust();
+      case "cust-edit": return sheetCust(byId("customers", id));
+      case "cust-save": return saveCust(id);
+      case "cust-del": if (confirm("Delete this customer?")) { save(deleteDoc(dref("customers", id))); closeSheet(); toast("Customer deleted."); } return;
+      case "cust-text": return textCustomer(byId("customers", id));
+      case "cust-tpl": return textCustomer(byId("customers", id), t.dataset.key);
+      case "cust-next": { const c = custFiltered().find(isDue) || S.customers.filter(isDue).sort((a, b) => custName(a).localeCompare(custName(b)))[0]; if (c) textCustomer(c); return; }
+      case "cust-untext": return save(updateDoc(dref("customers", id), { lastTexted: 0, resp: null, respDate: null }));
+      case "cust-yes": { const c = byId("customers", id); save(updateDoc(dref("customers", id), { resp: "yes", respDate: todayStr() })); return sheetJob({ customer: custName(c), customerId: c.id }); }
+      case "cust-no": return save(updateDoc(dref("customers", id), { resp: "no", respDate: todayStr() }));
+      case "cust-import": return sheetImport();
+      case "import-save": return doImport();
+
+      case "job-new": { const c = t.dataset.cust ? byId("customers", t.dataset.cust) : null; return sheetJob(c ? { customer: custName(c), customerId: c.id } : {}); }
+      case "job-edit": return sheetJob(byId("jobs", id));
+      case "job-save": return saveJob(id, t.dataset.cust);
+      case "job-del": if (confirm("Delete this job?")) { save(deleteDoc(dref("jobs", id))); closeSheet(); toast("Job deleted."); } return;
+      case "job-done": { const j = byId("jobs", id); return save(updateDoc(dref("jobs", id), { done: !j.done })); }
+      case "jobs-copy": return copyJobs(t.dataset.date);
+
+      case "deal-new": return sheetDeal();
+      case "deal-edit": return sheetDeal(byId("deals", id));
+      case "deal-save": return saveDeal(id);
+      case "deal-log": return logDeal(id, Number(t.dataset.days) || 3);
+      case "deal-text": return textDeal(id, t.dataset.key);
+      case "deal-del": if (confirm("Delete this lead?")) { save(deleteDoc(dref("deals", id))); closeSheet(); toast("Lead deleted."); } return;
+      case "deal-filter": S.dealFilter = t.dataset.f; return render();
+    }
+  } catch (err) { t.disabled = false; showErr(err); }
+});
+
+// Keep countdowns fresh
+setInterval(render, 5 * 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) render(); });
+</script>
+</body>
+</html>
